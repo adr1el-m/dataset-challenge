@@ -5,15 +5,16 @@
 /* ==========================================
    BLAST Slam 6 — LIVE Tournament Dashboard
    Dark gaming aesthetic for Dota 2 analysis
-   Enhanced with immersive animations
+   Enhanced with immersive Dota 2 HUD feel
    ========================================== */
 
 :root {
-  --bg-primary: #0a0a12;
-  --bg-surface: #12121f;
-  --bg-card: #1a1a2e;
-  --gold: #c9a537;
-  --gold-light: #e8d174;
+  --bg-primary: #06091a;
+  --bg-surface: #0d1128;
+  --bg-card: #131836;
+  --gold: #c3ff00;
+  --gold-light: #d4ff4d;
+  --blast-pink: #ff1a6c;
   --radiant: #92ff49;
   --dire: #ff4444;
   --text: #e5e7eb;
@@ -40,7 +41,7 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
 
 ::selection {
-  background: rgba(201, 165, 55, 0.3);
+  background: rgba(195, 255, 0, 0.25);
   color: #fff;
 }
 
@@ -72,8 +73,8 @@ body {
 }
 
 @keyframes borderGlow {
-  0%, 100% { border-color: rgba(201, 165, 55, 0.2); }
-  50% { border-color: rgba(201, 165, 55, 0.6); }
+  0%, 100% { border-color: rgba(195, 255, 0, 0.15); }
+  50% { border-color: rgba(195, 255, 0, 0.5); }
 }
 
 @keyframes textShine {
@@ -87,8 +88,8 @@ body {
 }
 
 @keyframes countdown-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(201, 165, 55, 0.2); }
-  50% { box-shadow: 0 0 24px rgba(201, 165, 55, 0.5), 0 0 48px rgba(201, 165, 55, 0.2); }
+  0%, 100% { box-shadow: 0 0 8px rgba(195, 255, 0, 0.15); }
+  50% { box-shadow: 0 0 24px rgba(195, 255, 0, 0.4), 0 0 48px rgba(195, 255, 0, 0.15); }
 }
 
 @keyframes scan-line {
@@ -114,7 +115,7 @@ body {
 
 /* ========== UTILITY CLASSES ========== */
 .text-gradient-gold {
-  background: linear-gradient(135deg, #c9a537, #e8d174, #c9a537);
+  background: linear-gradient(135deg, #c3ff00, #d4ff4d, #c3ff00);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -136,23 +137,9 @@ body {
   background-clip: text;
 }
 
-.glass-card {
-  background: rgba(26, 26, 46, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(201, 165, 55, 0.15);
-  border-radius: 16px;
-  transition: all 0.3s ease;
-}
-
-.glass-card:hover {
-  border-color: rgba(201, 165, 55, 0.4);
-  box-shadow: 0 8px 32px rgba(201, 165, 55, 0.1);
-}
-
 .glow-gold {
-  box-shadow: 0 0 20px rgba(201, 165, 55, 0.2),
-              0 0 40px rgba(201, 165, 55, 0.1);
+  box-shadow: 0 0 20px rgba(195, 255, 0, 0.15),
+              0 0 40px rgba(195, 255, 0, 0.06);
 }
 
 .glow-radiant {
@@ -188,7 +175,7 @@ body {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(270deg, #c9a537, #3b82f6, #ef4444, #c9a537);
+  background: linear-gradient(270deg, #c3ff00, #3b82f6, #ff1a6c, #c3ff00);
   background-size: 400% 400%;
   animation: gradient-x 6s linear infinite;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -202,7 +189,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(201, 165, 55, 0.08), transparent);
+  background: linear-gradient(90deg, transparent, rgba(195, 255, 0, 0.05), transparent);
   animation: shimmer 2.5s infinite;
 }
 
@@ -213,7 +200,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(201, 165, 55, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(195, 255, 0, 0.2), transparent);
   animation: scan-line 4s linear infinite;
   pointer-events: none;
 }
@@ -223,7 +210,7 @@ body {
   animation: float-slow 6s ease-in-out infinite;
 }
 
-/* Film grain overlay */
+/* Film grain overlay — disabled to prevent visible bouncing square
 .grain-overlay::after {
   content: "";
   position: fixed;
@@ -233,7 +220,7 @@ body {
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   animation: grain 8s steps(10) infinite;
-}
+} */
 
 /* Ambient background */
 .bg-particles {
@@ -263,7 +250,7 @@ body {
 }
 
 .bg-particles::after {
-  background: #8b5cf6;
+  background: #ff1a6c;
   bottom: -200px;
   right: -200px;
   animation: floatParticle 25s ease-in-out infinite reverse;
@@ -271,7 +258,7 @@ body {
 
 .section-divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201, 165, 55, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(195, 255, 0, 0.2), transparent);
   margin: 0 auto;
   max-width: 800px;
 }
@@ -279,8 +266,8 @@ body {
 .chart-container {
   border-radius: 16px;
   overflow: hidden;
-  background: rgba(18, 18, 31, 0.8);
-  border: 1px solid rgba(42, 42, 64, 0.6);
+  background: rgba(13, 17, 40, 0.8);
+  border: 1px solid rgba(30, 37, 80, 0.6);
 }
 
 /* Plotly overrides */
@@ -295,9 +282,9 @@ body {
 
 /* Countdown boxes */
 .countdown-segment {
-  background: rgba(26, 26, 46, 0.8);
+  background: rgba(13, 17, 40, 0.8);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(201, 165, 55, 0.25);
+  border: 1px solid rgba(195, 255, 0, 0.15);
   border-radius: 12px;
   padding: 8px 12px;
   min-width: 60px;
@@ -320,8 +307,153 @@ body {
   position: absolute;
   inset: -2px;
   border-radius: inherit;
-  background: linear-gradient(270deg, #c9a537, #3b82f6, #ef4444, #8b5cf6, #c9a537);
+  background: linear-gradient(270deg, #c3ff00, #3b82f6, #ff1a6c, #8b5cf6, #c3ff00);
   background-size: 400% 400%;
   animation: gradient-x 4s linear infinite;
   z-index: -1;
+}
+
+/* ========== DOTA 2 HUD AESTHETIC ========== */
+
+/* Beveled / angular clip — used on section headings & accent cards */
+.dota-clip {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+.dota-clip-sm {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+/* Inner corner accents — HUD-like decorative corners on glass-card */
+.glass-card {
+  background: rgba(13, 17, 40, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(195, 255, 0, 0.08);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 20px;
+  height: 20px;
+  border-top: 2px solid rgba(195, 255, 0, 0.15);
+  border-left: 2px solid rgba(195, 255, 0, 0.15);
+  border-top-left-radius: 16px;
+  pointer-events: none;
+  transition: border-color 0.3s ease;
+}
+
+.glass-card::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 20px;
+  height: 20px;
+  border-bottom: 2px solid rgba(195, 255, 0, 0.15);
+  border-right: 2px solid rgba(195, 255, 0, 0.15);
+  border-bottom-right-radius: 16px;
+  pointer-events: none;
+  transition: border-color 0.3s ease;
+}
+
+.glass-card:hover::before,
+.glass-card:hover::after {
+  border-color: rgba(195, 255, 0, 0.5);
+}
+
+.glass-card:hover {
+  border-color: rgba(195, 255, 0, 0.25);
+  box-shadow: 0 8px 32px rgba(195, 255, 0, 0.06);
+}
+
+/* Radiant / Dire side highlights */
+.radiant-accent {
+  border-left: 3px solid var(--radiant);
+  background: linear-gradient(90deg, rgba(146,255,73,0.04) 0%, transparent 40%);
+}
+
+.dire-accent {
+  border-left: 3px solid var(--dire);
+  background: linear-gradient(90deg, rgba(255,68,68,0.04) 0%, transparent 40%);
+}
+
+/* Dota 2 style dotted separator */
+.dota-divider {
+  height: 1px;
+  background: repeating-linear-gradient(90deg, rgba(195,255,0,0.25) 0px, rgba(195,255,0,0.25) 6px, transparent 6px, transparent 12px);
+}
+
+/* HUD-style stat bar */
+@keyframes stat-fill {
+  from { width: 0; }
+}
+
+.stat-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  animation: stat-fill 1.2s ease-out;
+}
+
+/* Minimap-style grid background for sections */
+.minimap-grid {
+  background-image:
+    linear-gradient(rgba(195,255,0,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(195,255,0,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Ambient hex pattern overlay (subtle) */
+.hex-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23c3ff00' fill-opacity='0.02'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Hero portrait frame - angled border for team/hero images */
+.hero-frame {
+  position: relative;
+  border: 2px solid rgba(195, 255, 0, 0.2);
+  clip-path: polygon(8% 0%, 100% 0%, 100% 92%, 92% 100%, 0% 100%, 0% 8%);
+}
+
+/* Kill-feed style notification */
+@keyframes kill-feed-in {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.kill-feed-item {
+  animation: kill-feed-in 0.4s ease-out;
+}
+
+/* Pulsing objective icon */
+@keyframes objective-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(195,255,0,0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(195,255,0,0); }
+}
+
+.objective-pulse {
+  animation: objective-pulse 2s ease-in-out infinite;
+}
+
+/* Angular header underline — Dota 2 style */
+.dota-underline {
+  position: relative;
+}
+
+.dota-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }

@@ -9,14 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Dota 2 inspired palette
+        // BLAST Slam VI tournament palette
         dota: {
-          bg: "#0a0a12",
-          surface: "#12121f",
-          card: "#1a1a2e",
-          border: "#2a2a40",
-          gold: "#c9a537",
-          "gold-light": "#e8d174",
+          bg: "#06091a",
+          surface: "#0d1128",
+          card: "#131836",
+          border: "#1e2550",
+          gold: "#c3ff00",
+          "gold-light": "#d4ff4d",
           radiant: "#92ff49",
           "radiant-dim": "#4a8c1d",
           dire: "#ff4444",
@@ -27,6 +27,19 @@ const config: Config = {
           muted: "#6b7280",
           text: "#e5e7eb",
           "text-dim": "#9ca3af",
+        },
+        blast: {
+          bg: "#06091a",
+          surface: "#0d1128",
+          card: "#131836",
+          border: "#1e2550",
+          lime: "#c3ff00",
+          "lime-dim": "#8ab300",
+          pink: "#ff1a6c",
+          "pink-dim": "#b3124b",
+          navy: "#0a1030",
+          blue: "#1a2660",
+          "blue-light": "#2a3a80",
         },
       },
       fontFamily: {
@@ -72,7 +85,7 @@ const config: Config = {
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "hero-gradient": "linear-gradient(135deg, #0a0a12 0%, #1a1a2e 50%, #0a0a12 100%)",
+        "hero-gradient": "linear-gradient(135deg, #06091a 0%, #131836 50%, #06091a 100%)",
       },
     },
   },

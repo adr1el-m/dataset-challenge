@@ -25,13 +25,15 @@ export const metadata: Metadata = {
   description:
     "Deep data-driven analysis of the BLAST Slam 6 Dota 2 tournament. Draft Synergy vs Tempo — what really wins championships?",
   keywords: ["Dota 2", "BLAST Slam 6", "esports analytics", "draft analysis", "tournament data"],
+  icons: {
+    icon: "/blast_slam_logo.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
       <body className="font-body bg-dota-bg text-dota-text antialiased grain-overlay">
-        <div className="bg-particles" />
         <div className="relative z-10">{children}</div>
       </body>
     </html>

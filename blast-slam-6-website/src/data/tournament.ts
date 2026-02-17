@@ -5,19 +5,6 @@
 // Source: https://liquipedia.net/dota2/BLAST/Slam/6
 // ============================================================
 
-import falconsLogo from "../img/falcons.png";
-import gamerLegionLogo from "../img/gamer_legion.png";
-import heroicLogo from "../img/heroic.png";
-import liquidLogo from "../img/liquid.png";
-import mouzLogo from "../img/mouz.png";
-import naviLogo from "../img/navi.png";
-import ogLogo from "../img/og.png";
-import rekonixLogo from "../img/rekonix.png";
-import spiritLogo from "../img/spirit.png";
-import tundraLogo from "../img/tundra.png";
-import xtremeLogo from "../img/xtreme_gaming.png";
-import yandexLogo from "../img/yandex.png";
-
 // --- TOURNAMENT PHASE ---
 export type TournamentPhase = "group" | "playoffs" | "grand_final" | "concluded";
 
@@ -49,20 +36,18 @@ export interface Team {
   placement?: string;
 }
 
-export const isImageLogo = (logo: string) => logo.startsWith("http") || logo.startsWith("/");
-
 export const teams: Team[] = [
   {
-    id: 1, name: "Team Liquid", tag: "Liquid", logo: liquidLogo.src,
+    id: 1, name: "Team Liquid", tag: "Liquid", logo: "/teams/liquid.png",
     region: "WEU", winRate: 0.72, matchCount: 25,
     synergyIndex: 82.1, tempoIndex: 71.5, avgDuration: 35.8,
     earlyGameWR: 0.68, radiantWR: 0.74, direWR: 0.70,
     firstBloodRate: 0.64, comebackRate: 0.36,
     signatureHeroes: ["Jakiro", "Mars", "Shadow Demon"],
-    color: "#06b6d4", eliminated: true, placement: "🏆 Champion"
+    color: "#06b6d4", eliminated: true, placement: "Champion"
   },
   {
-    id: 2, name: "Natus Vincere", tag: "NaVi", logo: naviLogo.src,
+    id: 2, name: "Natus Vincere", tag: "NaVi", logo: "/teams/navi.png",
     region: "EEU", winRate: 0.55, matchCount: 20,
     synergyIndex: 71.8, tempoIndex: 79.3, avgDuration: 31.4,
     earlyGameWR: 0.73, radiantWR: 0.68, direWR: 0.58,
@@ -71,7 +56,7 @@ export const teams: Team[] = [
     color: "#eab308", eliminated: true, placement: "2nd Place"
   },
   {
-    id: 3, name: "OG", tag: "OG", logo: ogLogo.src,
+    id: 3, name: "OG", tag: "OG", logo: "/teams/og.png",
     region: "WEU", winRate: 0.50, matchCount: 14,
     synergyIndex: 76.4, tempoIndex: 64.8, avgDuration: 38.2,
     earlyGameWR: 0.52, radiantWR: 0.64, direWR: 0.57,
@@ -80,7 +65,7 @@ export const teams: Team[] = [
     color: "#22c55e", eliminated: true, placement: "3rd–4th"
   },
   {
-    id: 4, name: "Team Yandex", tag: "Yandex", logo: yandexLogo.src,
+    id: 4, name: "Team Yandex", tag: "Yandex", logo: "/teams/yandex.png",
     region: "EEU", winRate: 0.591, matchCount: 22,
     synergyIndex: 69.5, tempoIndex: 75.2, avgDuration: 33.1,
     earlyGameWR: 0.66, radiantWR: 0.63, direWR: 0.59,
@@ -89,7 +74,7 @@ export const teams: Team[] = [
     color: "#ef4444", eliminated: true, placement: "3rd–4th"
   },
   {
-    id: 5, name: "Team Falcons", tag: "Falcons", logo: falconsLogo.src,
+    id: 5, name: "Team Falcons", tag: "Falcons", logo: "/teams/falcons.png",
     region: "MENA", winRate: 0.556, matchCount: 18,
     synergyIndex: 73.2, tempoIndex: 72.1, avgDuration: 34.0,
     earlyGameWR: 0.61, radiantWR: 0.67, direWR: 0.56,
@@ -98,7 +83,7 @@ export const teams: Team[] = [
     color: "#f97316", eliminated: true, placement: "5th–8th"
   },
   {
-    id: 6, name: "HEROIC", tag: "HEROIC", logo: heroicLogo.src,
+    id: 6, name: "HEROIC", tag: "HEROIC", logo: "/teams/heroic.png",
     region: "WEU", winRate: 0.526, matchCount: 19,
     synergyIndex: 66.8, tempoIndex: 74.5, avgDuration: 32.6,
     earlyGameWR: 0.63, radiantWR: 0.61, direWR: 0.53,
@@ -107,7 +92,7 @@ export const teams: Team[] = [
     color: "#a855f7", eliminated: true, placement: "5th–8th"
   },
   {
-    id: 7, name: "Tundra Esports", tag: "Tundra", logo: tundraLogo.src,
+    id: 7, name: "Tundra Esports", tag: "Tundra", logo: "/teams/tundra.png",
     region: "WEU", winRate: 0.538, matchCount: 13,
     synergyIndex: 83.5, tempoIndex: 58.2, avgDuration: 40.3,
     earlyGameWR: 0.46, radiantWR: 0.62, direWR: 0.54,
@@ -116,7 +101,7 @@ export const teams: Team[] = [
     color: "#3b82f6", eliminated: true, placement: "5th–8th"
   },
   {
-    id: 8, name: "Xtreme Gaming", tag: "XG", logo: xtremeLogo.src,
+    id: 8, name: "Xtreme Gaming", tag: "XG", logo: "/teams/xtreme_gaming.png",
     region: "China", winRate: 0.462, matchCount: 13,
     synergyIndex: 71.3, tempoIndex: 76.4, avgDuration: 30.8,
     earlyGameWR: 0.69, radiantWR: 0.58, direWR: 0.54,
@@ -125,7 +110,7 @@ export const teams: Team[] = [
     color: "#e11d48", eliminated: true, placement: "5th–8th"
   },
   {
-    id: 9, name: "Team Spirit", tag: "Spirit", logo: spiritLogo.src,
+    id: 9, name: "Team Spirit", tag: "Spirit", logo: "/teams/spirit.png",
     region: "EEU", winRate: 0.385, matchCount: 13,
     synergyIndex: 74.9, tempoIndex: 67.8, avgDuration: 36.5,
     earlyGameWR: 0.54, radiantWR: 0.58, direWR: 0.46,
@@ -134,7 +119,7 @@ export const teams: Team[] = [
     color: "#c9a537", eliminated: true, placement: "9th–12th"
   },
   {
-    id: 10, name: "GamerLegion", tag: "GL", logo: gamerLegionLogo.src,
+    id: 10, name: "GamerLegion", tag: "GL", logo: "/teams/gamer_legion.png",
     region: "WEU", winRate: 0.438, matchCount: 16,
     synergyIndex: 62.1, tempoIndex: 69.3, avgDuration: 34.7,
     earlyGameWR: 0.56, radiantWR: 0.56, direWR: 0.50,
@@ -143,7 +128,7 @@ export const teams: Team[] = [
     color: "#64748b", eliminated: true, placement: "9th–12th"
   },
   {
-    id: 11, name: "MOUZ", tag: "MOUZ", logo: mouzLogo.src,
+    id: 11, name: "MOUZ", tag: "MOUZ", logo: "/teams/mouz.png",
     region: "WEU", winRate: 0.357, matchCount: 14,
     synergyIndex: 64.5, tempoIndex: 66.1, avgDuration: 35.1,
     earlyGameWR: 0.50, radiantWR: 0.50, direWR: 0.43,
@@ -152,7 +137,7 @@ export const teams: Team[] = [
     color: "#8b5cf6", eliminated: true, placement: "9th–12th"
   },
   {
-    id: 12, name: "REKONIX", tag: "REKONIX", logo: rekonixLogo.src,
+    id: 12, name: "REKONIX", tag: "REKONIX", logo: "/teams/rekonix.png",
     region: "SA", winRate: 0.077, matchCount: 13,
     synergyIndex: 55.2, tempoIndex: 58.7, avgDuration: 33.3,
     earlyGameWR: 0.31, radiantWR: 0.15, direWR: 0.08,
@@ -290,7 +275,7 @@ export const modelResults: ModelResults = {
     liquidWinProb: 0.612,
     naviWinProb: 0.388,
     keyFactors: [
-      "Liquid's synergy index (82.1) is the highest among all 12 teams — their drafts consistently mesh",
+      "Liquid's synergy index (82.1) is among the highest of all 12 teams — their drafts consistently mesh",
       "NaVi's tempo (79.3) is formidable but historically insufficient against high-synergy opponents",
       "Liquid proved clutch under pressure — came back from 2-1 down vs Falcons in QF",
       "NaVi topped the group but struggled in the SF vs Yandex (3-2) — signs of inconsistency",
@@ -303,22 +288,44 @@ export const modelResults: ModelResults = {
 
 // --- GOLD DIFF TIMELINE (Grand Final — Game 4, Clincher) ---
 export const goldTimeline = {
-  minutes: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45],
+  minutes: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 45],
   teamA: "Team Liquid",
   teamB: "Natus Vincere",
   matchContext: "Grand Final — Game 4 (Championship Clincher)",
-  goldDiff: [0, -800, 1200, 3500, 2100, 5800, 8200, 12400, 15600, 19800],
-  xpDiff: [0, -400, 800, 2200, 1500, 4200, 6800, 9600, 13100, 17200],
-  events: [
-    { minute: 4, text: "NaVi First Blood", type: "dire" as const },
-    { minute: 9, text: "Liquid wins teamfight mid", type: "radiant" as const },
-    { minute: 14, text: "Liquid takes Roshan", type: "radiant" as const },
-    { minute: 18, text: "NaVi smoke gank 3-for-2", type: "dire" as const },
-    { minute: 23, text: "Liquid Smoke Gank 4-for-0", type: "radiant" as const },
-    { minute: 30, text: "Liquid secures Aegis #2", type: "radiant" as const },
-    { minute: 37, text: "Liquid wins high ground siege", type: "radiant" as const },
-    { minute: 43, text: "NaVi calls GG — Liquid are champions!", type: "radiant" as const },
+  goldDiff:   [0, -200, -600, -800, 200, 1200, 1800, 3500, 3200, 2100, 2800, 4100, 5100, 5800, 6900, 8200, 9400, 10800, 12400, 13800, 15600, 17200, 18900, 19800],
+  xpDiff:     [0, -100, -300, -400, 100, 800, 1200, 2200, 2000, 1500, 1900, 3000, 3800, 4200, 5200, 6800, 7600, 8400, 9600, 11200, 13100, 14800, 16500, 17200],
+  killDiff:   [0, 0, -1, -1, 0, 1, 2, 3, 2, 1, 2, 4, 5, 6, 7, 9, 10, 12, 14, 16, 18, 20, 22, 23],
+  towerDiff:  [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 7, 8, 9, 10, 11],
+  liquidNetWorth: [625, 1800, 3200, 4800, 6500, 8800, 11200, 14500, 17200, 19800, 22800, 26300, 29800, 33200, 37100, 41500, 45200, 49800, 54200, 59100, 64500, 69800, 74200, 76800],
+  naviNetWorth:   [625, 2000, 3800, 5600, 6300, 7600, 9400, 11000, 14000, 17700, 20000, 22200, 24700, 27400, 30200, 33300, 35800, 39000, 41800, 45300, 48900, 52600, 55300, 57000],
+  gamePhases: [
+    { start: 0, end: 10, label: "Laning Phase", color: "rgba(195,255,0,0.06)" },
+    { start: 10, end: 25, label: "Mid Game", color: "rgba(59,130,246,0.06)" },
+    { start: 25, end: 45, label: "Late Game", color: "rgba(255,26,108,0.06)" },
   ],
+  events: [
+    { minute: 4, text: "NaVi First Blood", type: "dire" as const, icon: "💀" },
+    { minute: 9, text: "Liquid wins teamfight mid", type: "radiant" as const, icon: "⚔️" },
+    { minute: 14, text: "Liquid takes Roshan", type: "radiant" as const, icon: "🛡️" },
+    { minute: 18, text: "NaVi smoke gank 3-for-2", type: "dire" as const, icon: "💨" },
+    { minute: 23, text: "Liquid Smoke Gank 4-for-0", type: "radiant" as const, icon: "⚔️" },
+    { minute: 30, text: "Liquid secures Aegis #2", type: "radiant" as const, icon: "🛡️" },
+    { minute: 37, text: "Liquid wins high ground siege", type: "radiant" as const, icon: "🏰" },
+    { minute: 43, text: "NaVi calls GG — Liquid are champions!", type: "radiant" as const, icon: "🏆" },
+  ],
+  // Summary stats for the game
+  summary: {
+    duration: "45:12",
+    liquidKills: 34,
+    naviKills: 11,
+    liquidTowers: 11,
+    naviTowers: 2,
+    peakGoldLead: 19800,
+    peakGoldLeadMin: 45,
+    turningPointMin: 14,
+    turningPointText: "Roshan secured — Liquid never looked back",
+    roshanKills: { liquid: 2, navi: 0 },
+  },
 };
 
 // --- TOURNAMENT STATS (FINAL — all 100 games) ---
@@ -439,3 +446,396 @@ export const playoffBracket: BracketMatch[] = [
 export const upperBracket = playoffBracket.filter((m) => m.round !== "Grand Final");
 export const lowerBracket = playInBracket;
 export const grandFinal: BracketMatch = playoffBracket.find((m) => m.round === "Grand Final")!;
+
+// --- GRAND FINAL DRAFT DATA (Game 4 — Championship Clincher) ---
+export interface DraftAction {
+  phase: string;
+  team: "Liquid" | "NaVi";
+  action: "ban" | "pick";
+  hero: string;
+  annotation?: string;
+}
+
+export const grandFinalDraft: DraftAction[] = [
+  // Ban Phase 1
+  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Tiny", annotation: "Liquid removes NaVi's most-played hero (39 picks, 38.5% WR)" },
+  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Shadow Demon", annotation: "NaVi targets Liquid's signature support — 84% contest rate" },
+  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Largo", annotation: "Denying NaVi's offlane comfort pick" },
+  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Enigma", annotation: "Removing Liquid's high-winrate flex option (62.5% WR)" },
+  // Pick Phase 1
+  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Jakiro", annotation: "First pick Jakiro — tournament's most-contested support (86% contest rate)" },
+  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Invoker", annotation: "NaVi grabs their highest-WR mid (54.2%)" },
+  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Earthshaker", annotation: "Double up on team-fight control" },
+  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Mars", annotation: "Liquid's signature offlaner — Arena + Ice Path is devastating" },
+  // Ban Phase 2
+  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Chen", annotation: "Denying the 62.5% WR hard support" },
+  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Morphling", annotation: "Shutting down gotthejuice's carry pool" },
+  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Naga Siren", annotation: "No late-game insurance for Liquid" },
+  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Spirit Breaker", annotation: "Removing NaVi's global tempo enabler" },
+  // Pick Phase 2
+  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Phantom Assassin", annotation: "gotthejuice's PA — high risk, high reward carry" },
+  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Phoenix", annotation: "Phoenix + Jakiro = double team-fight ultimates" },
+  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Rubick", annotation: "Rubick to steal Supernova or Ice Path — mind games" },
+  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Puck", annotation: "Nisha's Puck mid — elusive and aggressive" },
+  // Ban Phase 3
+  { phase: "Ban Phase 3", team: "Liquid", action: "ban", hero: "Dazzle", annotation: "No Shallow Grave for PA — Liquid forces NaVi to commit" },
+  { phase: "Ban Phase 3", team: "NaVi", action: "ban", hero: "Pangolier", annotation: "Last ban removing Liquid's flex option" },
+  // Pick Phase 3
+  { phase: "Pick Phase 3", team: "Liquid", action: "pick", hero: "Faceless Void", annotation: "miCKe's Void — Chronosphere + Arena is the GG combo" },
+  { phase: "Pick Phase 3", team: "NaVi", action: "pick", hero: "Sand King", annotation: "Sand King for initiation — NaVi's only answer to Chrono" },
+];
+
+// --- PLAYER SPOTLIGHT DATA ---
+export interface PlayerData {
+  name: string;
+  realName: string;
+  team: string;
+  role: string;
+  roleLabel: string;
+  country: string;
+  kda: { kills: number; deaths: number; assists: number };
+  avgKDA: number;
+  gpm: number;
+  xpm: number;
+  heroPool: string[];
+  signaturePlays: string[];
+  tournamentHighlight: string;
+  isMVP?: boolean;
+}
+
+export const playerSpotlights: PlayerData[] = [
+  // ── TEAM LIQUID ──
+  {
+    name: "Nisha",
+    realName: "Michał Jankowski",
+    team: "Team Liquid",
+    role: "mid",
+    roleLabel: "Midlane",
+    country: "PL",
+    kda: { kills: 187, deaths: 68, assists: 142 },
+    avgKDA: 4.84,
+    gpm: 628,
+    xpm: 712,
+    heroPool: ["Puck", "Invoker", "Lina", "Pangolier"],
+    signaturePlays: [
+      "Triple Illusory Orb dodge in GF Game 4 teamfight — survived 1 HP",
+      "Sunstrike snipe across map to secure Roshan for Liquid in SF Game 3",
+      "Solo killed NaVi's Invoker with Phase Shift jukes in GF Game 2",
+    ],
+    tournamentHighlight: "Tournament MVP — 4.84 avg KDA, highest mid GPM (628), and the decisive Puck performance in the Grand Final clincher.",
+    isMVP: true,
+  },
+  {
+    name: "miCKe",
+    realName: "Michael Vu",
+    team: "Team Liquid",
+    role: "carry",
+    roleLabel: "Carry",
+    country: "SE",
+    kda: { kills: 203, deaths: 72, assists: 98 },
+    avgKDA: 4.18,
+    gpm: 654,
+    xpm: 689,
+    heroPool: ["Faceless Void", "Morphling", "Naga Siren", "Phantom Assassin"],
+    signaturePlays: [
+      "5-man Chronosphere in GF Game 4 sealed the championship at 37 min",
+      "1v3 Void outplay vs Falcons in QF Game 5 — turned the series",
+      "Perfect Manta dodge on Naga in group stage vs Tundra",
+    ],
+    tournamentHighlight: "Liquid's closer — highest carry GPM (654), came alive in elimination games with a 78% win rate on Faceless Void.",
+  },
+  {
+    name: "Ace",
+    realName: "Marcus Hoelgaard",
+    team: "Team Liquid",
+    role: "offlane",
+    roleLabel: "Offlane",
+    country: "DK",
+    kda: { kills: 98, deaths: 81, assists: 221 },
+    avgKDA: 3.94,
+    gpm: 412,
+    xpm: 498,
+    heroPool: ["Mars", "Enigma", "Sand King", "Doom"],
+    signaturePlays: [
+      "Arena of Blood trapped 4 NaVi heroes for the GF Game 4 fight at Rosh pit",
+      "Clutch Black Hole on 3 Falcons heroes in QF Game 4 — kept Liquid alive",
+      "Flawless Mars in SF — 100% Arena accuracy across 3 OG games",
+    ],
+    tournamentHighlight: "The initiator — Ace's Mars had an 83% win rate this tournament. His Arena setups gave Liquid their signature teamfight identity.",
+  },
+  {
+    name: "tofu",
+    realName: "tofu",
+    team: "Team Liquid",
+    role: "support",
+    roleLabel: "Captain / Pos 4",
+    country: "SE",
+    kda: { kills: 52, deaths: 89, assists: 287 },
+    avgKDA: 3.81,
+    gpm: 298,
+    xpm: 352,
+    heroPool: ["Jakiro", "Phoenix", "Spirit Breaker", "Earthshaker"],
+    signaturePlays: [
+      "Captain's draft — out-drafted every opponent in playoffs (9-1 record)",
+      "Jakiro Ice Path + Macropyre combo wiped NaVi in GF Game 1",
+      "Phoenix Supernova saved 3 teammates in SF Game 2 — fight-winning egg",
+    ],
+    tournamentHighlight: "The mastermind — tofu's drafting was Liquid's secret weapon. 9-1 draft record in playoffs, with the highest synergy index (82.1) in the tournament.",
+  },
+  {
+    name: "Boxi",
+    realName: "Samuel Guldbrandsen",
+    team: "Team Liquid",
+    role: "hard_support",
+    roleLabel: "Hard Support",
+    country: "SE",
+    kda: { kills: 31, deaths: 92, assists: 301 },
+    avgKDA: 3.61,
+    gpm: 262,
+    xpm: 308,
+    heroPool: ["Shadow Demon", "Chen", "Witch Doctor", "Dazzle"],
+    signaturePlays: [
+      "Shadow Demon disruption saved miCKe from certain death 3 times in GF Game 3",
+      "Clutch Shallow Grave on Nisha in QF Game 5 — Nisha survived to win the fight",
+      "Ward vision dominance — 87% deward rate across the tournament",
+    ],
+    tournamentHighlight: "The unsung hero — Boxi's vision game was unmatched. 87% deward rate and the most assists per game (12.0) in the tournament.",
+  },
+  // ── NATUS VINCERE ──
+  {
+    name: "gotthejuice",
+    realName: "gotthejuice",
+    team: "Natus Vincere",
+    role: "carry",
+    roleLabel: "Carry",
+    country: "UA",
+    kda: { kills: 178, deaths: 84, assists: 87 },
+    avgKDA: 3.15,
+    gpm: 621,
+    xpm: 668,
+    heroPool: ["Phantom Assassin", "Morphling", "Faceless Void", "Tiny"],
+    signaturePlays: [
+      "PA rampage in SF Game 5 vs Yandex — 5 kills in 12 seconds",
+      "Morphling 1v2 outplay in group stage vs OG — Adaptive Strike double kill",
+      "Clutch BKB timing on PA in GF Game 2 — NaVi's only GF win",
+    ],
+    tournamentHighlight: "NaVi's star carry — 2nd highest GPM (621), but couldn't overcome Liquid's synergy in the Grand Final. PA was his tournament weapon (54.5% WR).",
+  },
+  {
+    name: "Niku",
+    realName: "Niku",
+    team: "Natus Vincere",
+    role: "mid",
+    roleLabel: "Midlane",
+    country: "UA",
+    kda: { kills: 152, deaths: 71, assists: 118 },
+    avgKDA: 3.80,
+    gpm: 584,
+    xpm: 642,
+    heroPool: ["Invoker", "Puck", "Lina", "Storm Spirit"],
+    signaturePlays: [
+      "Invoker Cataclysm combo in GF Game 2 secured NaVi's only Grand Final win",
+      "Storm Spirit zip-zap triple kill vs Yandex in SF Game 4 turned the map",
+      "Solo Roshan sneak on Lina in group stage — NaVi's fastest Aegis",
+    ],
+    tournamentHighlight: "NaVi's playmaker — Niku's Invoker was feared all tournament (54.2% WR). His Cataclysm in GF Game 2 was the series highlight.",
+  },
+  {
+    name: "pma",
+    realName: "pma",
+    team: "Natus Vincere",
+    role: "offlane",
+    roleLabel: "Offlane",
+    country: "RU",
+    kda: { kills: 86, deaths: 79, assists: 194 },
+    avgKDA: 3.54,
+    gpm: 388,
+    xpm: 462,
+    heroPool: ["Mars", "Sand King", "Largo", "Tidehunter"],
+    signaturePlays: [
+      "4-man Ravage in SF Game 5 vs Yandex — turned a losing fight into a teamwipe",
+      "Mars Arena zoning forced Liquid into bad positions in GF Game 2",
+      "Sand King Epicenter blink combo vs HEROIC wiped 3 in group stage",
+    ],
+    tournamentHighlight: "NaVi's frontliner — pma's initiation was key to NaVi's tempo game plan. His Tidehunter Ravage in the SF won them the series.",
+  },
+  {
+    name: "Zayac",
+    realName: "Bakyt Emilzhanov",
+    team: "Natus Vincere",
+    role: "support",
+    roleLabel: "Support",
+    country: "KG",
+    kda: { kills: 44, deaths: 82, assists: 258 },
+    avgKDA: 3.68,
+    gpm: 284,
+    xpm: 338,
+    heroPool: ["Rubick", "Earthshaker", "Spirit Breaker", "Tusk"],
+    signaturePlays: [
+      "Rubick stole Supernova in GF Game 2 — turned the fight and won the map",
+      "Spirit Breaker global charge setup for gotthejuice's PA crit in SF vs Yandex Game 5",
+      "Echo Slam 4-man stun in group stage vs OG locked the teamfight",
+    ],
+    tournamentHighlight: "The veteran support — Zayac's Rubick spell steal in GF Game 2 was the single best play of the tournament. His experience anchored NaVi's run.",
+  },
+  {
+    name: "Riddys",
+    realName: "Riddys",
+    team: "Natus Vincere",
+    role: "hard_support",
+    roleLabel: "Captain / Pos 5",
+    country: "UA",
+    kda: { kills: 28, deaths: 76, assists: 242 },
+    avgKDA: 3.55,
+    gpm: 268,
+    xpm: 314,
+    heroPool: ["Shadow Demon", "Crystal Maiden", "Dazzle", "Witch Doctor"],
+    signaturePlays: [
+      "Shadow Demon setup for gotthejuice's PA crit in SF vs Yandex Game 5",
+      "Crystal Maiden Freezing Field in Rosh pit during GF Game 3 — almost turned the game",
+      "Clutch Shallow Grave timing kept gotthejuice alive in group stage vs Liquid",
+    ],
+    tournamentHighlight: "The captain — Riddys' drafting nearly matched Liquid's in the Grand Final. His vision game and shot-calling carried NaVi to the finals.",
+  },
+];
+
+// --- ALL DOTA 2 HEROES (for Draft Simulator) ---
+export type HeroAttribute = "strength" | "agility" | "intelligence" | "universal";
+
+export interface DotaHero {
+  name: string;
+  attribute: HeroAttribute;
+}
+
+export const allDotaHeroes: DotaHero[] = [
+  // ── STRENGTH ──
+  { name: "Alchemist", attribute: "strength" },
+  { name: "Axe", attribute: "strength" },
+  { name: "Bristleback", attribute: "strength" },
+  { name: "Centaur Warrunner", attribute: "strength" },
+  { name: "Chaos Knight", attribute: "strength" },
+  { name: "Dawnbreaker", attribute: "strength" },
+  { name: "Doom", attribute: "strength" },
+  { name: "Dragon Knight", attribute: "strength" },
+  { name: "Earth Spirit", attribute: "strength" },
+  { name: "Earthshaker", attribute: "strength" },
+  { name: "Huskar", attribute: "strength" },
+  { name: "Kunkka", attribute: "strength" },
+  { name: "Legion Commander", attribute: "strength" },
+  { name: "Lifestealer", attribute: "strength" },
+  { name: "Mars", attribute: "strength" },
+  { name: "Night Stalker", attribute: "strength" },
+  { name: "Ogre Magi", attribute: "strength" },
+  { name: "Omniknight", attribute: "strength" },
+  { name: "Primal Beast", attribute: "strength" },
+  { name: "Pudge", attribute: "strength" },
+  { name: "Slardar", attribute: "strength" },
+  { name: "Sven", attribute: "strength" },
+  { name: "Tidehunter", attribute: "strength" },
+  { name: "Timbersaw", attribute: "strength" },
+  { name: "Tiny", attribute: "strength" },
+  { name: "Treant Protector", attribute: "strength" },
+  { name: "Tusk", attribute: "strength" },
+  { name: "Underlord", attribute: "strength" },
+  { name: "Undying", attribute: "strength" },
+  { name: "Wraith King", attribute: "strength" },
+  // ── AGILITY ──
+  { name: "Anti-Mage", attribute: "agility" },
+  { name: "Arc Warden", attribute: "agility" },
+  { name: "Bloodseeker", attribute: "agility" },
+  { name: "Bounty Hunter", attribute: "agility" },
+  { name: "Clinkz", attribute: "agility" },
+  { name: "Drow Ranger", attribute: "agility" },
+  { name: "Ember Spirit", attribute: "agility" },
+  { name: "Faceless Void", attribute: "agility" },
+  { name: "Gyrocopter", attribute: "agility" },
+  { name: "Hoodwink", attribute: "agility" },
+  { name: "Juggernaut", attribute: "agility" },
+  { name: "Luna", attribute: "agility" },
+  { name: "Medusa", attribute: "agility" },
+  { name: "Meepo", attribute: "agility" },
+  { name: "Monkey King", attribute: "agility" },
+  { name: "Morphling", attribute: "agility" },
+  { name: "Naga Siren", attribute: "agility" },
+  { name: "Phantom Assassin", attribute: "agility" },
+  { name: "Phantom Lancer", attribute: "agility" },
+  { name: "Razor", attribute: "agility" },
+  { name: "Riki", attribute: "agility" },
+  { name: "Shadow Fiend", attribute: "agility" },
+  { name: "Slark", attribute: "agility" },
+  { name: "Sniper", attribute: "agility" },
+  { name: "Spectre", attribute: "agility" },
+  { name: "Templar Assassin", attribute: "agility" },
+  { name: "Terrorblade", attribute: "agility" },
+  { name: "Troll Warlord", attribute: "agility" },
+  { name: "Ursa", attribute: "agility" },
+  { name: "Viper", attribute: "agility" },
+  { name: "Weaver", attribute: "agility" },
+  // ── INTELLIGENCE ──
+  { name: "Ancient Apparition", attribute: "intelligence" },
+  { name: "Crystal Maiden", attribute: "intelligence" },
+  { name: "Dazzle", attribute: "intelligence" },
+  { name: "Disruptor", attribute: "intelligence" },
+  { name: "Grimstroke", attribute: "intelligence" },
+  { name: "Invoker", attribute: "intelligence" },
+  { name: "Jakiro", attribute: "intelligence" },
+  { name: "Keeper of the Light", attribute: "intelligence" },
+  { name: "Leshrac", attribute: "intelligence" },
+  { name: "Lich", attribute: "intelligence" },
+  { name: "Lina", attribute: "intelligence" },
+  { name: "Lion", attribute: "intelligence" },
+  { name: "Muerta", attribute: "intelligence" },
+  { name: "Nature's Prophet", attribute: "intelligence" },
+  { name: "Necrophos", attribute: "intelligence" },
+  { name: "Oracle", attribute: "intelligence" },
+  { name: "Outworld Destroyer", attribute: "intelligence" },
+  { name: "Puck", attribute: "intelligence" },
+  { name: "Pugna", attribute: "intelligence" },
+  { name: "Queen of Pain", attribute: "intelligence" },
+  { name: "Rubick", attribute: "intelligence" },
+  { name: "Shadow Demon", attribute: "intelligence" },
+  { name: "Shadow Shaman", attribute: "intelligence" },
+  { name: "Silencer", attribute: "intelligence" },
+  { name: "Skywrath Mage", attribute: "intelligence" },
+  { name: "Storm Spirit", attribute: "intelligence" },
+  { name: "Tinker", attribute: "intelligence" },
+  { name: "Warlock", attribute: "intelligence" },
+  { name: "Witch Doctor", attribute: "intelligence" },
+  { name: "Zeus", attribute: "intelligence" },
+  // ── UNIVERSAL ──
+  { name: "Abaddon", attribute: "universal" },
+  { name: "Bane", attribute: "universal" },
+  { name: "Batrider", attribute: "universal" },
+  { name: "Beastmaster", attribute: "universal" },
+  { name: "Brewmaster", attribute: "universal" },
+  { name: "Broodmother", attribute: "universal" },
+  { name: "Chen", attribute: "universal" },
+  { name: "Clockwerk", attribute: "universal" },
+  { name: "Dark Seer", attribute: "universal" },
+  { name: "Dark Willow", attribute: "universal" },
+  { name: "Death Prophet", attribute: "universal" },
+  { name: "Enchantress", attribute: "universal" },
+  { name: "Enigma", attribute: "universal" },
+  { name: "Io", attribute: "universal" },
+  { name: "Lone Druid", attribute: "universal" },
+  { name: "Lycan", attribute: "universal" },
+  { name: "Magnus", attribute: "universal" },
+  { name: "Marci", attribute: "universal" },
+  { name: "Mirana", attribute: "universal" },
+  { name: "Nyx Assassin", attribute: "universal" },
+  { name: "Pangolier", attribute: "universal" },
+  { name: "Phoenix", attribute: "universal" },
+  { name: "Sand King", attribute: "universal" },
+  { name: "Snapfire", attribute: "universal" },
+  { name: "Spirit Breaker", attribute: "universal" },
+  { name: "Techies", attribute: "universal" },
+  { name: "Vengeful Spirit", attribute: "universal" },
+  { name: "Venomancer", attribute: "universal" },
+  { name: "Visage", attribute: "universal" },
+  { name: "Void Spirit", attribute: "universal" },
+  { name: "Windranger", attribute: "universal" },
+  { name: "Winter Wyvern", attribute: "universal" },
+  { name: "Largo", attribute: "universal" },
+  { name: "Ringmaster", attribute: "universal" },
+  { name: "Kez", attribute: "agility" },
+];

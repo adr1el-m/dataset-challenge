@@ -1,5 +1,0 @@
-{
-  "installCommand": "cd blast-slam-6-website && npm install",
-  "buildCommand": "cd blast-slam-6-website && npm run build",
-  "outputDirectory": "blast-slam-6-website/out"
-}

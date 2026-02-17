@@ -1,7 +1,7 @@
 {
   "builds": [
     {
-      "src": "blast-slam-6-website/package.json",
+      "src": "package.json",
       "use": "@vercel/next"
     }
   ]

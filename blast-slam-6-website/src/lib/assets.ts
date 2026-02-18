@@ -81,7 +81,7 @@ const heroInternalNames: Record<string, string> = {
   "Treant Protector": "treant",
   "Troll Warlord": "troll_warlord",
   "Underlord": "abyssal_underlord",
-  "Vengeful Spirit": "vengeful_spirit",
+  "Vengeful Spirit": "vengefulspirit",
   "Void Spirit": "void_spirit",
   "Windranger": "windrunner",
   "Winter Wyvern": "winter_wyvern",
@@ -120,3 +120,6 @@ export function getHeroIcon(heroName: string): string {
 export function getPlayerAvatar(playerName: string): string {
   return `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${encodeURIComponent(playerName)}&backgroundColor=0d1128`;
 }
+
+export const blurDataUrl =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMGQxMTI4Ii8+PC9zdmc+";

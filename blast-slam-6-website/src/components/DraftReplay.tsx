@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { grandFinalDraft } from "@/data/tournament";
-import { getHeroIcon } from "@/lib/assets";
+import { blurDataUrl, getHeroIcon } from "@/lib/assets";
 
 const TIMER_DURATION = 2200; // ms per step
 
@@ -165,10 +166,14 @@ export default function DraftReplay() {
                             transition={{ type: "spring", stiffness: 200, damping: 15 }}
                             className="relative w-full h-full"
                           >
-                            <img
+                            <Image
                               src={getHeroIcon(pick.hero)}
                               alt={pick.hero}
-                              className="w-full h-full object-cover rounded"
+                              fill
+                              sizes="64px"
+                              className="object-cover rounded"
+                              placeholder="blur"
+                              blurDataURL={blurDataUrl}
                             />
                             <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-[8px] text-center text-white py-0.5 truncate px-0.5">
                               {pick.hero}
@@ -204,10 +209,14 @@ export default function DraftReplay() {
                             transition={{ type: "spring", stiffness: 200, damping: 15 }}
                             className="relative w-full h-full"
                           >
-                            <img
+                            <Image
                               src={getHeroIcon(pick.hero)}
                               alt={pick.hero}
-                              className="w-full h-full object-cover rounded"
+                              fill
+                              sizes="64px"
+                              className="object-cover rounded"
+                              placeholder="blur"
+                              blurDataURL={blurDataUrl}
                             />
                             <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-[8px] text-center text-white py-0.5 truncate px-0.5">
                               {pick.hero}
@@ -246,10 +255,14 @@ export default function DraftReplay() {
                             animate={{ opacity: 1, scale: 1 }}
                             className="relative w-full h-full"
                           >
-                            <img
+                            <Image
                               src={getHeroIcon(ban.hero)}
                               alt={ban.hero}
-                              className="w-full h-full object-cover rounded opacity-40 grayscale"
+                              fill
+                              sizes="40px"
+                              className="object-cover rounded opacity-40 grayscale"
+                              placeholder="blur"
+                              blurDataURL={blurDataUrl}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
                               <span className="text-[#ff4444] text-lg font-bold">✕</span>
@@ -284,10 +297,14 @@ export default function DraftReplay() {
                             animate={{ opacity: 1, scale: 1 }}
                             className="relative w-full h-full"
                           >
-                            <img
+                            <Image
                               src={getHeroIcon(ban.hero)}
                               alt={ban.hero}
-                              className="w-full h-full object-cover rounded opacity-40 grayscale"
+                              fill
+                              sizes="40px"
+                              className="object-cover rounded opacity-40 grayscale"
+                              placeholder="blur"
+                              blurDataURL={blurDataUrl}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
                               <span className="text-[#ff4444] text-lg font-bold">✕</span>
@@ -396,7 +413,7 @@ export default function DraftReplay() {
                 }`}
               >
                 <div
-                  className={`w-7 h-7 rounded overflow-hidden border ${
+                  className={`w-7 h-7 rounded overflow-hidden border relative ${
                     action.action === "ban"
                       ? "border-[#ff4444]/30 grayscale opacity-60"
                       : action.team === "Liquid"
@@ -404,10 +421,14 @@ export default function DraftReplay() {
                       : "border-[#eab308]/40"
                   }`}
                 >
-                  <img
+                  <Image
                     src={getHeroIcon(action.hero)}
                     alt={action.hero}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="28px"
+                    className="object-cover"
+                    placeholder="blur"
+                    blurDataURL={blurDataUrl}
                   />
                 </div>
                 <span
@@ -452,11 +473,15 @@ export default function DraftReplay() {
                           transition={{ delay: i * 0.1 }}
                           className="flex flex-col items-center gap-1"
                         >
-                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg border-2 border-[#92ff49]/50 overflow-hidden glow-radiant">
-                            <img
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg border-2 border-[#92ff49]/50 overflow-hidden glow-radiant relative">
+                            <Image
                               src={getHeroIcon(pick.hero)}
                               alt={pick.hero}
-                              className="w-full h-full object-cover"
+                              fill
+                              sizes="56px"
+                              className="object-cover"
+                              placeholder="blur"
+                              blurDataURL={blurDataUrl}
                             />
                           </div>
                           <span className="text-[9px] text-gray-400">{pick.hero}</span>
@@ -478,11 +503,15 @@ export default function DraftReplay() {
                           transition={{ delay: i * 0.1 + 0.3 }}
                           className="flex flex-col items-center gap-1"
                         >
-                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg border-2 border-[#ff4444]/50 overflow-hidden glow-dire">
-                            <img
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg border-2 border-[#ff4444]/50 overflow-hidden glow-dire relative">
+                            <Image
                               src={getHeroIcon(pick.hero)}
                               alt={pick.hero}
-                              className="w-full h-full object-cover"
+                              fill
+                              sizes="56px"
+                              className="object-cover"
+                              placeholder="blur"
+                              blurDataURL={blurDataUrl}
                             />
                           </div>
                           <span className="text-[9px] text-gray-400">{pick.hero}</span>
@@ -493,9 +522,9 @@ export default function DraftReplay() {
               </div>
               <div className="text-center mt-6 pt-4 border-t border-dota-border/20">
                 <p className="text-sm text-dota-gold font-mono">
-                  Liquid&apos;s synergy draft (Chrono + Arena + Ice Path + Supernova) overwhelmed NaVi&apos;s tempo lineup.
+                  Liquid&apos;s Batrider + Shadow Demon + Earth Spirit + Dragon Knight + Ember Spirit lineup locked the tempo and map control.
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Result: Team Liquid wins 34–11 in 45 minutes for the championship.</p>
+                <p className="text-xs text-gray-500 mt-1">Result: Team Liquid wins 33–10 in 32:27 for the championship.</p>
               </div>
             </motion.div>
           )}

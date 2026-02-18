@@ -2,6 +2,8 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
+import { blurDataUrl } from "@/lib/assets";
 import { quizQuestions, teams, modelResults } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
 
@@ -122,11 +124,14 @@ export default function PredictTheWinner() {
               <div className="absolute inset-0 bg-gradient-radial from-dota-gold/5 via-transparent to-transparent pointer-events-none" />
 
               <div className="relative z-10">
-                <img
+                <Image
                   src="/blast_slam_logo.png"
                   alt="BLAST Slam VI"
+                  width={64}
+                  height={64}
                   className="w-16 h-auto mx-auto mb-5 object-contain"
-                  style={{ aspectRatio: "auto" }}
+                  placeholder="blur"
+                  blurDataURL={blurDataUrl}
                 />
                 <h3 className="font-heading text-2xl sm:text-3xl font-bold mb-2">
                   Test Your Match Analysis
@@ -338,11 +343,14 @@ export default function PredictTheWinner() {
               <div className={`absolute inset-0 bg-gradient-to-b ${resultTier.bg} pointer-events-none`} />
 
               <div className="relative z-10">
-                <img
+                <Image
                   src="/blast_slam_logo.png"
                   alt="BLAST Slam VI"
+                  width={48}
+                  height={48}
                   className="w-12 h-auto mx-auto mb-4 object-contain"
-                  style={{ aspectRatio: "auto" }}
+                  placeholder="blur"
+                  blurDataURL={blurDataUrl}
                 />
 
                 <motion.div
@@ -418,4 +426,3 @@ export default function PredictTheWinner() {
     </section>
   );
 }
-

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { playerSpotlights, PlayerData } from "@/data/tournament";
-import { getHeroIcon, getPlayerAvatar } from "@/lib/assets";
+import { blurDataUrl, getHeroIcon, getPlayerAvatar } from "@/lib/assets";
 
 const ROLE_COLORS: Record<string, string> = {
   carry: "#ff6b6b",
@@ -16,7 +17,18 @@ const ROLE_COLORS: Record<string, string> = {
 function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const roleColor = ROLE_COLORS[player.role] || "#888";
-  const kda = `${player.kda.kills}/${player.kda.deaths}/${player.kda.assists}`;
+  const kda =
+    player.kda.kills === null || player.kda.deaths === null || player.kda.assists === null
+      ? "Not listed"
+      : `${player.kda.kills}/${player.kda.deaths}/${player.kda.assists}`;
+  const impact =
+    player.kda.kills === null || player.kda.deaths === null || player.kda.assists === null
+      ? null
+      : (player.kda.kills + player.kda.assists) / Math.max(1, player.kda.deaths);
+  const contribution =
+    player.kda.kills === null || player.kda.assists === null
+      ? null
+      : player.kda.kills + player.kda.assists;
   const isLiquid = player.team === "Team Liquid";
 
   return (
@@ -48,10 +60,15 @@ function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
             <div className={`w-12 h-12 rounded-full overflow-hidden border-2 flex-shrink-0 ${
               isLiquid ? "border-[#06b6d4]/40" : "border-[#eab308]/40"
             }`}>
-              <img
-                src={getPlayerAvatar(player.name)}
+              <Image
+                src={player.avatarUrl || getPlayerAvatar(player.name)}
                 alt={player.name}
+                width={48}
+                height={48}
+                sizes="48px"
                 className="w-full h-full object-cover bg-dota-surface/50"
+                placeholder="blur"
+                blurDataURL={blurDataUrl}
               />
             </div>
 
@@ -88,15 +105,17 @@ function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
           <div className="grid grid-cols-4 gap-3 mt-4">
             <div>
               <div className="text-[10px] font-mono text-gray-500 uppercase">KDA</div>
-              <div className="text-sm font-bold text-white">{player.avgKDA.toFixed(2)}</div>
+              <div className="text-sm font-bold text-white">
+                {player.avgKDA === null ? "Not listed" : player.avgKDA.toFixed(2)}
+              </div>
             </div>
             <div>
               <div className="text-[10px] font-mono text-gray-500 uppercase">GPM</div>
-              <div className="text-sm font-bold text-dota-gold">{player.gpm}</div>
+              <div className="text-sm font-bold text-dota-gold">{player.gpm ?? "Not listed"}</div>
             </div>
             <div>
               <div className="text-[10px] font-mono text-gray-500 uppercase">XPM</div>
-              <div className="text-sm font-bold text-gray-300">{player.xpm}</div>
+              <div className="text-sm font-bold text-gray-300">{player.xpm ?? "Not listed"}</div>
             </div>
             <div>
               <div className="text-[10px] font-mono text-gray-500 uppercase">K/D/A</div>
@@ -108,21 +127,29 @@ function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
           <div className="mt-3">
             <div className="text-[10px] font-mono text-gray-500 uppercase mb-1.5">Hero Pool</div>
             <div className="flex gap-1.5">
-              {player.heroPool.map((hero) => (
-                <div
-                  key={hero}
-                  className="w-8 h-8 rounded border border-dota-border/30 overflow-hidden hover:border-dota-gold/40 transition-all group relative"
-                >
-                  <img
-                    src={getHeroIcon(hero)}
-                    alt={hero}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="text-[7px] text-white text-center leading-tight">{hero}</span>
+              {player.heroPool.length === 0 ? (
+                <span className="text-[10px] text-gray-500">Not listed</span>
+              ) : (
+                player.heroPool.map((hero) => (
+                  <div
+                    key={hero}
+                    className="w-8 h-8 rounded border border-dota-border/30 overflow-hidden hover:border-dota-gold/40 transition-all group relative"
+                  >
+                    <Image
+                      src={getHeroIcon(hero)}
+                      alt={hero}
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
+                      placeholder="blur"
+                      blurDataURL={blurDataUrl}
+                    />
+                    <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="text-[7px] text-white text-center leading-tight">{hero}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -143,8 +170,11 @@ function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
                   <div className="text-[10px] font-mono text-dota-gold uppercase tracking-wider mb-2">
                     Signature Plays
                   </div>
-                  <div className="space-y-2">
-                    {player.signaturePlays.map((play, i) => (
+                <div className="space-y-2">
+                  {player.signaturePlays.length === 0 ? (
+                    <p className="text-xs text-gray-400 leading-relaxed">Not available.</p>
+                  ) : (
+                    player.signaturePlays.map((play, i) => (
                       <motion.div
                         key={i}
                         initial={{ opacity: 0, x: -10 }}
@@ -155,8 +185,9 @@ function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
                         <span className="text-dota-gold/60 text-xs mt-0.5 flex-shrink-0">▹</span>
                         <p className="text-xs text-gray-400 leading-relaxed">{play}</p>
                       </motion.div>
-                    ))}
-                  </div>
+                    ))
+                  )}
+                </div>
                 </div>
 
                 {/* Tournament Highlight */}
@@ -168,7 +199,7 @@ function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
                     : "bg-[#eab308]/5 border-[#eab308]/20"
                 }`}>
                   <div className="text-[10px] font-mono text-gray-500 uppercase mb-1">Tournament Highlight</div>
-                  <p className="text-xs text-gray-300 leading-relaxed">{player.tournamentHighlight}</p>
+                  <p className="text-xs text-gray-300 leading-relaxed">{player.tournamentHighlight ?? "Not available."}</p>
                 </div>
 
                 {/* Stat Bars */}
@@ -176,25 +207,50 @@ function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
                   <div>
                     <div className="flex items-center justify-between mb-0.5">
                       <span className="text-[9px] font-mono text-gray-500">Kills</span>
-                      <span className="text-[9px] font-mono text-gray-400">{player.kda.kills}</span>
+                      <span className="text-[9px] font-mono text-gray-400">{player.kda.kills ?? "N/A"}</span>
                     </div>
                     <div className="h-1 bg-dota-surface rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-[#ff6b6b]/70"
-                        style={{ width: `${Math.min((player.kda.kills / 210) * 100, 100)}%` }}
-                      />
+                      {player.kda.kills !== null && (
+                        <div
+                          className="h-full rounded-full bg-[#ff6b6b]/70"
+                          style={{ width: `${Math.min((player.kda.kills / 210) * 100, 100)}%` }}
+                        />
+                      )}
                     </div>
                   </div>
                   <div>
                     <div className="flex items-center justify-between mb-0.5">
                       <span className="text-[9px] font-mono text-gray-500">Assists</span>
-                      <span className="text-[9px] font-mono text-gray-400">{player.kda.assists}</span>
+                      <span className="text-[9px] font-mono text-gray-400">{player.kda.assists ?? "N/A"}</span>
                     </div>
                     <div className="h-1 bg-dota-surface rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-[#4d96ff]/70"
-                        style={{ width: `${Math.min((player.kda.assists / 310) * 100, 100)}%` }}
-                      />
+                      {player.kda.assists !== null && (
+                        <div
+                          className="h-full rounded-full bg-[#4d96ff]/70"
+                          style={{ width: `${Math.min((player.kda.assists / 310) * 100, 100)}%` }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 grid grid-cols-3 gap-3">
+                  <div className="bg-dota-surface/50 rounded-lg p-2 border border-white/5">
+                    <div className="text-[9px] font-mono text-gray-500 uppercase">Impact</div>
+                    <div className="text-sm font-heading font-bold text-white">
+                      {impact === null ? "Not listed" : impact.toFixed(2)}
+                    </div>
+                  </div>
+                  <div className="bg-dota-surface/50 rounded-lg p-2 border border-white/5">
+                    <div className="text-[9px] font-mono text-gray-500 uppercase">K+A</div>
+                    <div className="text-sm font-heading font-bold text-dota-gold">
+                      {contribution ?? "Not listed"}
+                    </div>
+                  </div>
+                  <div className="bg-dota-surface/50 rounded-lg p-2 border border-white/5">
+                    <div className="text-[9px] font-mono text-gray-500 uppercase">Deaths</div>
+                    <div className="text-sm font-heading font-bold text-gray-300">
+                      {player.kda.deaths ?? "Not listed"}
                     </div>
                   </div>
                 </div>

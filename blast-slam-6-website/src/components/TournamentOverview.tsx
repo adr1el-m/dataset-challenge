@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
-import { tournamentStats, matches, goldTimeline, playoffBracket } from "@/data/tournament";
+import { tournamentStats, matches, goldTimeline, playoffBracket, playInBracket } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
@@ -11,9 +11,15 @@ const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 /* ───────────────────────────────────────
    BRACKET MATCH ROW (compact inline card)
    ─────────────────────────────────────── */
-function BracketMatch({ match }: { match: typeof playoffBracket[0] }) {
+function BracketMatch({ match, index }: { match: typeof playoffBracket[0]; index: number }) {
   return (
-    <div className="bg-dota-card/80 border border-white/5 rounded-lg overflow-hidden w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.08 }}
+      className="bg-dota-card/80 border border-white/5 rounded-lg overflow-hidden w-full relative group"
+    >
       {[
         { name: match.teamA, score: match.scoreA, won: match.winner === match.teamA },
         { name: match.teamB, score: match.scoreB, won: match.winner === match.teamB },
@@ -35,7 +41,14 @@ function BracketMatch({ match }: { match: typeof playoffBracket[0] }) {
           </span>
         </div>
       ))}
-    </div>
+      <div className="absolute left-1/2 -translate-x-1/2 -top-2 -translate-y-full z-20 hidden group-hover:block pointer-events-none">
+        <div className="bg-dota-card border border-dota-gold/20 rounded-xl p-3 shadow-2xl text-xs whitespace-nowrap">
+          <div className="font-heading font-bold text-white mb-1">{match.round}</div>
+          <div className="text-dota-text-dim">Winner: {match.winner}</div>
+          <div className="text-dota-text-dim">Score: {match.scoreA}–{match.scoreB}</div>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -52,10 +65,28 @@ export default function TournamentOverview() {
     (m) => m.isUpset || m.round === "Grand Final" || m.round.includes("Semifinal")
   );
   const [chartMode, setChartMode] = useState<ChartMode>("gold");
+  const formatNumber = (value: number | null, suffix = "") =>
+    value === null ? "Not listed" : `${value}${suffix}`;
+  const [isMobile, setIsMobile] = useState(false);
 
   /* ── Bracket ref for connector lines ── */
   const bracketRef = useRef<HTMLDivElement>(null);
   const [lines, setLines] = useState<{ x1: number; y1: number; x2: number; y2: number }[]>([]);
+  const chartRef = useRef<HTMLDivElement>(null);
+  const chartInView = useInView(chartRef, { once: true, margin: "-120px" });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 640px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    if (mq.addEventListener) mq.addEventListener("change", update);
+    else mq.addListener(update);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", update);
+      else mq.removeListener(update);
+    };
+  }, []);
 
   useEffect(() => {
     function calcLines() {
@@ -133,16 +164,15 @@ export default function TournamentOverview() {
     };
 
     switch (chartMode) {
-      case "gold":
-        return [
-          {
+      case "gold": {
+        const goldTrace = {
             type: "scatter" as const,
             mode: "lines+markers" as const,
             x: goldTimeline.minutes,
             y: goldTimeline.goldDiff,
             name: "Gold Difference",
-            line: { color: "#c3ff00", width: 3, shape: "spline" as const },
-            marker: { size: 4, color: "#c3ff00" },
+            line: { color: "#c3ff00", width: isMobile ? 2 : 3, shape: "spline" as const },
+            marker: { size: isMobile ? 0 : 4, color: "#c3ff00" },
             fill: "tozeroy" as const,
             fillcolor: "rgba(195,255,0,0.07)",
             hovertemplate:
@@ -150,21 +180,21 @@ export default function TournamentOverview() {
               "Gold Lead: <b>%{y:+,}</b><br>" +
               "<extra></extra>",
             ...hoverCommon,
-          },
-          {
+          };
+        const xpTrace = {
             type: "scatter" as const,
             mode: "lines" as const,
             x: goldTimeline.minutes,
             y: goldTimeline.xpDiff,
             name: "XP Difference",
-            line: { color: "#ff1a6c", width: 2, dash: "dot" as const, shape: "spline" as const },
+            line: { color: "#ff1a6c", width: isMobile ? 1.5 : 2, dash: "dot" as const, shape: "spline" as const },
             hovertemplate:
               "<b>Minute %{x}</b><br>" +
               "XP Lead: <b>%{y:+,}</b><br>" +
               "<extra></extra>",
             ...hoverCommon,
-          },
-          {
+          };
+        const killTrace = {
             type: "scatter" as const,
             mode: "lines" as const,
             x: goldTimeline.minutes,
@@ -178,8 +208,9 @@ export default function TournamentOverview() {
             customdata: goldTimeline.killDiff,
             yaxis: "y" as const,
             ...hoverCommon,
-          },
-        ];
+          };
+        return isMobile ? [goldTrace, xpTrace] : [goldTrace, xpTrace, killTrace];
+      }
       case "networth":
         return [
           {
@@ -188,8 +219,8 @@ export default function TournamentOverview() {
             x: goldTimeline.minutes,
             y: goldTimeline.naviNetWorth,
             name: "Natus Vincere",
-            line: { color: "#eab308", width: 3, shape: "spline" as const },
-            marker: { size: 4, color: "#eab308" },
+            line: { color: "#eab308", width: isMobile ? 2 : 3, shape: "spline" as const },
+            marker: { size: isMobile ? 0 : 4, color: "#eab308" },
             hovertemplate:
               "<b>Minute %{x}</b><br>" +
               "NaVi: <b>%{y:,}g</b><br>" +
@@ -202,8 +233,8 @@ export default function TournamentOverview() {
             x: goldTimeline.minutes,
             y: goldTimeline.liquidNetWorth,
             name: "Team Liquid",
-            line: { color: "#06b6d4", width: 3, shape: "spline" as const },
-            marker: { size: 4, color: "#06b6d4" },
+            line: { color: "#06b6d4", width: isMobile ? 2 : 3, shape: "spline" as const },
+            marker: { size: isMobile ? 0 : 4, color: "#06b6d4" },
             fill: "tonexty" as const,
             fillcolor: "rgba(6,182,212,0.06)",
             hovertemplate:
@@ -231,7 +262,10 @@ export default function TournamentOverview() {
               "<extra></extra>",
             ...hoverCommon,
           },
-          {
+          ...(isMobile
+            ? []
+            : [
+                {
             type: "scatter" as const,
             mode: "lines" as const,
             x: goldTimeline.minutes,
@@ -244,24 +278,26 @@ export default function TournamentOverview() {
               "Tower Diff: <b>%{y:+}</b><br>" +
               "<extra></extra>",
             ...hoverCommon,
-          },
+                },
+              ]),
         ];
     }
   };
 
   const getLayout = (): Record<string, unknown> => {
+    const maxMinute = goldTimeline.minutes[goldTimeline.minutes.length - 1] ?? 0;
     const base = {
       margin: { l: 55, r: 45, t: 10, b: 45 },
       paper_bgcolor: "transparent",
       plot_bgcolor: "transparent",
       font: { color: "#9ca3af", family: "Inter, sans-serif" },
-      height: 400,
-      showlegend: true,
+      height: isMobile ? 300 : 400,
+      showlegend: !isMobile,
       legend: {
         font: { color: "#9ca3af", size: 10 },
         bgcolor: "transparent",
         orientation: "h" as const,
-        y: 1.14,
+        y: isMobile ? 1.02 : 1.14,
         x: 0.5,
         xanchor: "center" as const,
       },
@@ -275,7 +311,7 @@ export default function TournamentOverview() {
         title: { text: "Game Time (minutes)", font: { size: 11 } },
         tickfont: { color: "#9ca3af", size: 10 },
         gridcolor: "rgba(30,37,80,0.3)",
-        range: [0, 46],
+        range: [0, maxMinute],
         spikemode: "across" as const,
         spikesnap: "cursor" as const,
         spikecolor: "rgba(195,255,0,0.5)",
@@ -361,6 +397,7 @@ export default function TournamentOverview() {
   const qf = playoffBracket.filter((m) => m.round === "Quarterfinal");
   const sf = playoffBracket.filter((m) => m.round === "Semifinal");
   const gf = playoffBracket.filter((m) => m.round === "Grand Final");
+  const playIn = playInBracket;
 
   return (
     <section id="overview" className="relative py-20 sm:py-32 px-4 sm:px-6 minimap-grid">
@@ -386,7 +423,7 @@ export default function TournamentOverview() {
             Tournament Overview
           </h2>
           <p className="text-dota-text-dim max-w-xl mx-auto text-sm sm:text-base">
-            100 games of elite Dota 2 across Groups, Play-Ins, Playoffs, &amp; a dominant Grand Final.
+            100 official games across Groups, Play-Ins, Playoffs, &amp; a decisive Grand Final.
           </p>
         </motion.div>
 
@@ -399,12 +436,12 @@ export default function TournamentOverview() {
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-12 sm:mb-16"
         >
           {[
-            { label: "Total Games", value: tournamentStats.totalGames },
-            { label: "Avg Duration", value: `${tournamentStats.avgDuration}m` },
-            { label: "Radiant Win Rate", value: `${(tournamentStats.radiantWinRate * 100).toFixed(1)}%` },
-            { label: "Heroes Picked", value: tournamentStats.totalHeroesPicked },
-            { label: "Comeback Rate", value: `${(tournamentStats.comebackRate * 100).toFixed(0)}%` },
-            { label: "MVP", value: tournamentStats.mvp },
+            { label: "Total Games", value: formatNumber(tournamentStats.totalGames) },
+            { label: "Teams", value: formatNumber(tournamentStats.teamsParticipated) },
+            { label: "Prize Pool", value: `$${tournamentStats.prizePool.toLocaleString()}` },
+            { label: "Location", value: tournamentStats.location },
+            { label: "Champion", value: tournamentStats.champion },
+            { label: "Runner-Up", value: tournamentStats.runnerUp },
           ].map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -483,13 +520,19 @@ export default function TournamentOverview() {
           </div>
 
           {/* The chart */}
-          <div className="chart-container">
-            <Plot
-              data={getPlotData() as Plotly.Data[]}
-              layout={getLayout() as Partial<Plotly.Layout>}
-              config={{ displayModeBar: false, responsive: true }}
-              style={{ width: "100%", height: "400px" }}
-            />
+          <div className="chart-container" ref={chartRef}>
+            {chartInView ? (
+              <Plot
+                data={getPlotData() as Plotly.Data[]}
+                layout={getLayout() as Partial<Plotly.Layout>}
+                config={{ displayModeBar: false, responsive: true }}
+                style={{ width: "100%", height: isMobile ? "300px" : "400px" }}
+              />
+            ) : (
+              <div className="h-[300px] sm:h-[400px] flex items-center justify-center text-xs text-dota-text-dim">
+                Loading chart…
+              </div>
+            )}
           </div>
 
           {/* Summary stat cards */}
@@ -521,6 +564,44 @@ export default function TournamentOverview() {
               <div className="text-[11px] text-dota-text-dim">{goldTimeline.summary.turningPointText}</div>
             </div>
           </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-10 sm:mb-14"
+        >
+          <h3 className="font-heading text-xl sm:text-2xl font-bold text-center mb-2">
+            Play-In to Playoffs
+          </h3>
+          <p className="text-xs text-dota-text-dim text-center mb-6">Progression from Play-In winners into the main bracket</p>
+          <div className="flex flex-col lg:flex-row items-stretch gap-4 sm:gap-6">
+            <div className="flex-1 glass-card p-4 sm:p-5">
+              <div className="text-[10px] text-dota-text-dim uppercase tracking-wider mb-3 text-center font-semibold">
+                Play-In
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {playIn.map((m, i) => (
+                  <BracketMatch key={`playin-${i}`} match={m} index={i} />
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center justify-center text-dota-gold/60 text-xs font-semibold tracking-widest uppercase">
+              →
+            </div>
+            <div className="flex-1 glass-card p-4 sm:p-5">
+              <div className="text-[10px] text-dota-text-dim uppercase tracking-wider mb-3 text-center font-semibold">
+                Quarterfinals
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {qf.map((m, i) => (
+                  <BracketMatch key={`qf-mini-${i}`} match={m} index={i + playIn.length} />
+                ))}
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* ══════════════════════════════════════════
@@ -566,7 +647,7 @@ export default function TournamentOverview() {
                   <div className="flex flex-col justify-around flex-1 gap-6">
                     {qf.map((m, i) => (
                       <div key={`qf-${i}`} data-bracket={`qf-${i}`}>
-                        <BracketMatch match={m} />
+                        <BracketMatch match={m} index={i} />
                       </div>
                     ))}
                   </div>
@@ -580,7 +661,7 @@ export default function TournamentOverview() {
                   <div className="flex flex-col justify-around flex-1 gap-6">
                     {sf.map((m, i) => (
                       <div key={`sf-${i}`} data-bracket={`sf-${i}`}>
-                        <BracketMatch match={m} />
+                        <BracketMatch match={m} index={i + 2} />
                       </div>
                     ))}
                   </div>
@@ -593,7 +674,7 @@ export default function TournamentOverview() {
                   </div>
                   <div className="flex flex-col justify-center flex-1">
                     <div data-bracket="gf-0" className="border-gradient-animated rounded-lg">
-                      <BracketMatch match={gf[0]} />
+                      <BracketMatch match={gf[0]} index={4} />
                     </div>
                     <div className="flex items-center justify-center gap-1.5 mt-3">
                       <TeamLogo name="Team Liquid" size={18} />
@@ -624,7 +705,7 @@ export default function TournamentOverview() {
                 <div className={`grid ${round.items.length > 1 ? "grid-cols-2" : "max-w-xs mx-auto"} gap-3`}>
                   {round.items.map((m, i) => (
                     <div key={`mobile-${round.label}-${i}`} className={round.label === "Grand Final" ? "border-gradient-animated rounded-lg" : ""}>
-                      <BracketMatch match={m} />
+                      <BracketMatch match={m} index={i} />
                     </div>
                   ))}
                 </div>
@@ -686,8 +767,12 @@ export default function TournamentOverview() {
                 </div>
                 <p className="text-xs text-dota-text-dim leading-relaxed">{match.keyMoment}</p>
                 <div className="flex items-center gap-3 mt-2 text-[10px] text-dota-text-dim">
-                  <span>{match.duration.toFixed(1)} min</span>
-                  <span>Gold Diff: {match.goldDiff > 0 ? "+" : ""}{match.goldDiff.toLocaleString()}</span>
+                  <span>{match.duration === null ? "Duration: N/A" : `${match.duration.toFixed(1)} min`}</span>
+                  <span>
+                    {match.goldDiff === null
+                      ? "Gold Diff: N/A"
+                      : `Gold Diff: ${match.goldDiff > 0 ? "+" : ""}${match.goldDiff.toLocaleString()}`}
+                  </span>
                 </div>
               </motion.div>
             ))}

@@ -188,6 +188,13 @@ export const heroMeta: HeroMeta[] = [
   { name: "Vengeful Spirit", picks: 12, bans: 5, winRate: 0.5833, contestRate: 0.17, role: "support" },
 ];
 
+export const heroMetaByPhase = {
+  overall: heroMeta,
+  groups: null,
+  playoffs: null,
+  grandFinal: null,
+} as const;
+
 // --- MATCH DATA (key matches from the tournament) ---
 export interface Match {
   id: number;
@@ -197,34 +204,19 @@ export interface Match {
   scoreA: number;
   scoreB: number;
   winner: string;
-  duration: number;
-  goldDiff: number;
+  duration: number | null;
+  goldDiff: number | null;
   isUpset: boolean;
   keyMoment: string;
   status: "completed" | "live" | "upcoming";
 }
 
 export const matches: Match[] = [
-  // Group Stage highlights
-  { id: 1, round: "Group Stage", teamA: "Natus Vincere", teamB: "Team Liquid", scoreA: 1, scoreB: 0, winner: "Natus Vincere", duration: 28.3, goldDiff: 12500, isUpset: false, keyMoment: "NaVi's Tiny snowballed mid, took game in under 30 min", status: "completed" },
-  { id: 2, round: "Group Stage", teamA: "OG", teamB: "Natus Vincere", scoreA: 0, scoreB: 1, winner: "Natus Vincere", duration: 34.1, goldDiff: 8900, isUpset: false, keyMoment: "NaVi's tempo play overwhelmed OG's slow draft", status: "completed" },
-  { id: 3, round: "Group Stage", teamA: "Team Liquid", teamB: "Tundra Esports", scoreA: 0, scoreB: 1, winner: "Tundra Esports", duration: 44.7, goldDiff: -5200, isUpset: false, keyMoment: "Tundra's late-game Naga timing was untouchable", status: "completed" },
-  { id: 4, round: "Group Stage", teamA: "REKONIX", teamB: "MOUZ", scoreA: 1, scoreB: 0, winner: "REKONIX", duration: 41.2, goldDiff: 3800, isUpset: true, keyMoment: "REKONIX's only win — TaiLung's heroic performance", status: "completed" },
-  { id: 5, round: "Group Stage", teamA: "Team Liquid", teamB: "OG", scoreA: 1, scoreB: 0, winner: "Team Liquid", duration: 36.4, goldDiff: 7600, isUpset: false, keyMoment: "Liquid's Shadow Demon picks dismantled OG's lineup", status: "completed" },
-  // Last Chance Playoff
-  { id: 6, round: "Last Chance", teamA: "HEROIC", teamB: "REKONIX", scoreA: 2, scoreB: 0, winner: "HEROIC", duration: 27.5, goldDiff: 18200, isUpset: false, keyMoment: "HEROIC dominated; REKONIX eliminated", status: "completed" },
-  { id: 7, round: "Last Chance", teamA: "GamerLegion", teamB: "MOUZ", scoreA: 2, scoreB: 1, winner: "GamerLegion", duration: 38.6, goldDiff: 4100, isUpset: false, keyMoment: "GamerLegion reverse-swept after dropping Game 1", status: "completed" },
-  // Play-In
-  { id: 8, round: "Play-In", teamA: "Team Yandex", teamB: "Team Spirit", scoreA: 2, scoreB: 0, winner: "Team Yandex", duration: 30.8, goldDiff: 11300, isUpset: false, keyMoment: "Yandex's tempo crushed Spirit — Malik's debut impact", status: "completed" },
-  { id: 9, round: "Play-In", teamA: "Team Falcons", teamB: "Xtreme Gaming", scoreA: 2, scoreB: 0, winner: "Team Falcons", duration: 32.1, goldDiff: 9700, isUpset: false, keyMoment: "Falcons outclassed XG in both games", status: "completed" },
-  { id: 10, round: "Play-In", teamA: "Tundra Esports", teamB: "HEROIC", scoreA: 0, scoreB: 2, winner: "HEROIC", duration: 29.4, goldDiff: -14600, isUpset: true, keyMoment: "Tundra's slow style punished by HEROIC's aggression", status: "completed" },
-  { id: 11, round: "Play-In", teamA: "Team Liquid", teamB: "GamerLegion", scoreA: 2, scoreB: 0, winner: "Team Liquid", duration: 31.5, goldDiff: 13400, isUpset: false, keyMoment: "Liquid looked dominant — clean 2-0", status: "completed" },
-  // Playoffs (Bo5)
-  { id: 12, round: "Quarterfinal", teamA: "Team Falcons", teamB: "Team Liquid", scoreA: 2, scoreB: 3, winner: "Team Liquid", duration: 37.8, goldDiff: 4200, isUpset: false, keyMoment: "Liquid came back from 2-1 down — won Games 4 & 5 with superior drafts", status: "completed" },
-  { id: 13, round: "Quarterfinal", teamA: "Team Yandex", teamB: "HEROIC", scoreA: 3, scoreB: 1, winner: "Team Yandex", duration: 34.2, goldDiff: 8100, isUpset: false, keyMoment: "Yandex controlled the tempo after dropping Game 1", status: "completed" },
-  { id: 14, round: "Semifinal", teamA: "OG", teamB: "Team Liquid", scoreA: 0, scoreB: 3, winner: "Team Liquid", duration: 33.5, goldDiff: 14800, isUpset: false, keyMoment: "Liquid swept OG 3-0 — dominant drafting left OG with no answers", status: "completed" },
-  { id: 15, round: "Semifinal", teamA: "Natus Vincere", teamB: "Team Yandex", scoreA: 3, scoreB: 2, winner: "Natus Vincere", duration: 36.9, goldDiff: 3500, isUpset: false, keyMoment: "NaVi's tempo barely survived Yandex's resistance — Game 5 decided", status: "completed" },
-  { id: 16, round: "Grand Final", teamA: "Team Liquid", teamB: "Natus Vincere", scoreA: 3, scoreB: 1, winner: "Team Liquid", duration: 38.4, goldDiff: 10600, isUpset: false, keyMoment: "Liquid's synergy unraveled NaVi's tempo — miCKe & Nisha dominated", status: "completed" },
+  { id: 1, round: "Quarterfinal", teamA: "Team Falcons", teamB: "Team Liquid", scoreA: 2, scoreB: 3, winner: "Team Liquid", duration: null, goldDiff: null, isUpset: false, keyMoment: "Series result confirmed on official bracket.", status: "completed" },
+  { id: 2, round: "Quarterfinal", teamA: "Team Yandex", teamB: "HEROIC", scoreA: 3, scoreB: 1, winner: "Team Yandex", duration: null, goldDiff: null, isUpset: false, keyMoment: "Series result confirmed on official bracket.", status: "completed" },
+  { id: 3, round: "Semifinal", teamA: "OG", teamB: "Team Liquid", scoreA: 0, scoreB: 3, winner: "Team Liquid", duration: null, goldDiff: null, isUpset: false, keyMoment: "Series result confirmed on official bracket.", status: "completed" },
+  { id: 4, round: "Semifinal", teamA: "Natus Vincere", teamB: "Team Yandex", scoreA: 3, scoreB: 2, winner: "Natus Vincere", duration: null, goldDiff: null, isUpset: false, keyMoment: "Series result confirmed on official bracket.", status: "completed" },
+  { id: 5, round: "Grand Final", teamA: "Team Liquid", teamB: "Natus Vincere", scoreA: 3, scoreB: 1, winner: "Team Liquid", duration: null, goldDiff: null, isUpset: false, keyMoment: "Series result confirmed on official bracket.", status: "completed" },
 ];
 
 // --- MODEL RESULTS ---
@@ -288,58 +280,56 @@ export const modelResults: ModelResults = {
 
 // --- GOLD DIFF TIMELINE (Grand Final — Game 4, Clincher) ---
 export const goldTimeline = {
-  minutes: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 45],
+  minutes: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32],
   teamA: "Team Liquid",
   teamB: "Natus Vincere",
-  matchContext: "Grand Final — Game 4 (Championship Clincher)",
-  goldDiff:   [0, -200, -600, -800, 200, 1200, 1800, 3500, 3200, 2100, 2800, 4100, 5100, 5800, 6900, 8200, 9400, 10800, 12400, 13800, 15600, 17200, 18900, 19800],
-  xpDiff:     [0, -100, -300, -400, 100, 800, 1200, 2200, 2000, 1500, 1900, 3000, 3800, 4200, 5200, 6800, 7600, 8400, 9600, 11200, 13100, 14800, 16500, 17200],
-  killDiff:   [0, 0, -1, -1, 0, 1, 2, 3, 2, 1, 2, 4, 5, 6, 7, 9, 10, 12, 14, 16, 18, 20, 22, 23],
-  towerDiff:  [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 4, 5, 5, 6, 7, 8, 9, 10, 11],
-  liquidNetWorth: [625, 1800, 3200, 4800, 6500, 8800, 11200, 14500, 17200, 19800, 22800, 26300, 29800, 33200, 37100, 41500, 45200, 49800, 54200, 59100, 64500, 69800, 74200, 76800],
-  naviNetWorth:   [625, 2000, 3800, 5600, 6300, 7600, 9400, 11000, 14000, 17700, 20000, 22200, 24700, 27400, 30200, 33300, 35800, 39000, 41800, 45300, 48900, 52600, 55300, 57000],
+  matchContext: "Grand Final — Game 4 (32:27)",
+  goldDiff:   [0, 256, 362, 413, 1056, 1280, 1039, 773, 917, 1017, 1456, 3025, 3739, 3522, 4459, 4237, 3579, 3462, 3607, 3229, 4241, 7088, 7118, 6599, 8328, 10519, 10959, 11839, 12279, 16123, 18921, 23814, 24346],
+  xpDiff:     [0, -34, -183, 66, 497, 764, 773, 1225, 1232, 1535, 908, 3556, 3428, 2730, 2922, 5089, 4549, 3793, 3727, 4752, 5814, 10439, 14970, 14308, 16484, 17662, 18491, 20673, 21645, 27069, 35512, 38310, 39421],
+  killDiff:   [0, 2, 2, 3, 3, 2, 1, 0, 0, 1, 2, 3, 2, 2, 2, 1, 1, 1, 2, 2, 6, 7, 7, 10, 10, 10, 12, 12, 14, 19, 19, 19, 23],
+  towerDiff:  [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 2, 2, 2, 1, 2, 3, 4, 4, 4, 4, 5, 5, 6, 6, 7],
+  liquidNetWorth: [0, 1482, 2687, 4142, 5717, 6975, 8333, 9594, 11685, 13519, 15409, 17954, 20567, 22616, 25547, 27607, 29433, 32137, 34794, 37554, 40544, 44414, 46867, 49593, 53287, 57132, 59126, 62948, 65213, 70671, 74354, 80444, 82884],
+  naviNetWorth:   [0, 1226, 2325, 3729, 4661, 5695, 7294, 8821, 10768, 12502, 13953, 14929, 16828, 19094, 21088, 23370, 25854, 28675, 31187, 34325, 36303, 37326, 39749, 42994, 44959, 46613, 48167, 51109, 52934, 54548, 55433, 56630, 58538],
   gamePhases: [
     { start: 0, end: 10, label: "Laning Phase", color: "rgba(195,255,0,0.06)" },
-    { start: 10, end: 25, label: "Mid Game", color: "rgba(59,130,246,0.06)" },
-    { start: 25, end: 45, label: "Late Game", color: "rgba(255,26,108,0.06)" },
+    { start: 10, end: 20, label: "Mid Game", color: "rgba(59,130,246,0.06)" },
+    { start: 20, end: 32, label: "Late Game", color: "rgba(255,26,108,0.06)" },
   ],
   events: [
-    { minute: 4, text: "NaVi First Blood", type: "dire" as const, icon: "💀" },
-    { minute: 9, text: "Liquid wins teamfight mid", type: "radiant" as const, icon: "⚔️" },
-    { minute: 14, text: "Liquid takes Roshan", type: "radiant" as const, icon: "🛡️" },
-    { minute: 18, text: "NaVi smoke gank 3-for-2", type: "dire" as const, icon: "💨" },
-    { minute: 23, text: "Liquid Smoke Gank 4-for-0", type: "radiant" as const, icon: "⚔️" },
-    { minute: 30, text: "Liquid secures Aegis #2", type: "radiant" as const, icon: "🛡️" },
-    { minute: 37, text: "Liquid wins high ground siege", type: "radiant" as const, icon: "🏰" },
-    { minute: 43, text: "NaVi calls GG — Liquid are champions!", type: "radiant" as const, icon: "🏆" },
+    { minute: 7, text: "Liquid take top Tier 1", type: "radiant" as const, icon: "🏹" },
+    { minute: 11, text: "Liquid take mid Tier 1", type: "radiant" as const, icon: "🗼" },
+    { minute: 19, text: "Liquid secure Roshan", type: "radiant" as const, icon: "🛡️" },
+    { minute: 24, text: "Liquid take top Tier 2", type: "radiant" as const, icon: "🏰" },
+    { minute: 28, text: "Liquid breach high ground", type: "radiant" as const, icon: "⚔️" },
+    { minute: 31, text: "Liquid secure second Roshan", type: "radiant" as const, icon: "🛡️" },
+    { minute: 32, text: "NaVi calls GG — Liquid are champions!", type: "radiant" as const, icon: "🏆" },
   ],
-  // Summary stats for the game
   summary: {
-    duration: "45:12",
-    liquidKills: 34,
-    naviKills: 11,
-    liquidTowers: 11,
+    duration: "32:27",
+    liquidKills: 33,
+    naviKills: 10,
+    liquidTowers: 9,
     naviTowers: 2,
-    peakGoldLead: 19800,
-    peakGoldLeadMin: 45,
-    turningPointMin: 14,
-    turningPointText: "Roshan secured — Liquid never looked back",
+    peakGoldLead: 24346,
+    peakGoldLeadMin: 32,
+    turningPointMin: 11,
+    turningPointText: "Liquid claim mid Tier 1 and snowball map control",
     roshanKills: { liquid: 2, navi: 0 },
   },
 };
 
-// --- TOURNAMENT STATS (FINAL — all 100 games) ---
+// --- TOURNAMENT STATS (official results) ---
 export const tournamentStats = {
-  totalMatches: 100,
+  totalMatches: null,
   totalGames: 100,
-  avgDuration: 34.8,
-  longestGame: 62.4,
-  shortestGame: 18.1,
-  totalHeroesPicked: 89,
-  totalHeroesBanned: 78,
-  radiantWinRate: 0.521,
-  firstBloodLeadToWin: 0.592,
-  comebackRate: 0.278,
+  avgDuration: null,
+  longestGame: null,
+  shortestGame: null,
+  totalHeroesPicked: null,
+  totalHeroesBanned: null,
+  radiantWinRate: null,
+  firstBloodLeadToWin: null,
+  comebackRate: null,
   prizePool: 1000000,
   teamsParticipated: 12,
   teamsRemaining: 0,
@@ -347,10 +337,10 @@ export const tournamentStats = {
   phase: "Concluded" as string,
   champion: "Team Liquid",
   runnerUp: "Natus Vincere",
-  mvp: "Nisha",
+  mvp: "Not listed",
   grandFinalists: ["Team Liquid", "Natus Vincere"] as string[],
   dominantFactor: "synergy" as const,
-  synergyVsTempoRatio: 1.15,
+  synergyVsTempoRatio: null,
   location: "Malta",
 };
 
@@ -378,22 +368,22 @@ export const quizQuestions: QuizQuestion[] = [
     teamA: "Team Liquid",
     teamB: "Team Falcons",
     correctAnswer: "Team Liquid",
-    hint: "One team has tournament-best synergy; the other is balanced but scrappy",
-    explanation: "Liquid came back from 2-1 down, winning Games 4 & 5 with superior draft adaptation — their synergy index (82.1) shone when it mattered most.",
+    hint: "Refer to the official playoff bracket results",
+    explanation: "Team Liquid won the quarterfinal series 3–2 over Team Falcons.",
   },
   {
     teamA: "OG",
     teamB: "Team Liquid",
     correctAnswer: "Team Liquid",
-    hint: "Think about which playstyle dominated the semifinal",
-    explanation: "Liquid swept OG 3-0. OG's synergy (76.4) was high but not enough — Liquid's superior adaptability and tempo balance left OG without answers.",
+    hint: "Check the semifinal series score",
+    explanation: "Team Liquid swept OG 3–0 in the semifinals.",
   },
   {
     teamA: "Natus Vincere",
     teamB: "Team Yandex",
     correctAnswer: "Natus Vincere",
-    hint: "Both teams favor tempo, but one had the group stage edge",
-    explanation: "NaVi barely won 3-2 in a tempo mirror. Their higher tempo index (79.3 vs 75.2) and Yatoro's clutch plays pulled them through.",
+    hint: "Use the official bracket result",
+    explanation: "Natus Vincere won the semifinal series 3–2 over Team Yandex.",
   },
   {
     teamA: "Team Liquid",
@@ -458,31 +448,35 @@ export interface DraftAction {
 
 export const grandFinalDraft: DraftAction[] = [
   // Ban Phase 1
-  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Tiny", annotation: "Liquid removes NaVi's most-played hero (39 picks, 38.5% WR)" },
-  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Shadow Demon", annotation: "NaVi targets Liquid's signature support — 84% contest rate" },
-  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Largo", annotation: "Denying NaVi's offlane comfort pick" },
-  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Enigma", annotation: "Removing Liquid's high-winrate flex option (62.5% WR)" },
+  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Underlord", annotation: "Targeting NaVi's offlane comfort" },
+  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Shadow Fiend", annotation: "Removing a Liquid mid staple" },
+  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Viper", annotation: "Denying lane-dominant flex pick" },
+  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Treant Protector", annotation: "Cutting sustain and save utility" },
   // Pick Phase 1
-  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Jakiro", annotation: "First pick Jakiro — tournament's most-contested support (86% contest rate)" },
-  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Invoker", annotation: "NaVi grabs their highest-WR mid (54.2%)" },
-  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Earthshaker", annotation: "Double up on team-fight control" },
-  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Mars", annotation: "Liquid's signature offlaner — Arena + Ice Path is devastating" },
+  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Batrider", annotation: "Open with a tempo offlaner" },
+  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Tiny", annotation: "NaVi lock in Tiny early" },
+  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Warlock", annotation: "Teamfight support secured" },
+  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Shadow Demon", annotation: "Disruption save and setup" },
   // Ban Phase 2
-  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Chen", annotation: "Denying the 62.5% WR hard support" },
-  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Morphling", annotation: "Shutting down gotthejuice's carry pool" },
-  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Naga Siren", annotation: "No late-game insurance for Liquid" },
-  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Spirit Breaker", annotation: "Removing NaVi's global tempo enabler" },
+  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Disruptor", annotation: "Removing teamfight control" },
+  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Jakiro", annotation: "Denying Liquid's support comfort" },
+  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Razor", annotation: "Cutting lane pressure" },
+  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Kez", annotation: "Targeted midlane removal" },
   // Pick Phase 2
-  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Phantom Assassin", annotation: "gotthejuice's PA — high risk, high reward carry" },
-  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Phoenix", annotation: "Phoenix + Jakiro = double team-fight ultimates" },
-  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Rubick", annotation: "Rubick to steal Supernova or Ice Path — mind games" },
-  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Puck", annotation: "Nisha's Puck mid — elusive and aggressive" },
+  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Earth Spirit", annotation: "High-tempo roamer" },
+  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Mars", annotation: "Initiation and teamfight core" },
+  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Puck", annotation: "Mobile mid presence" },
+  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Dragon Knight", annotation: "Frontline core with objective pressure" },
   // Ban Phase 3
-  { phase: "Ban Phase 3", team: "Liquid", action: "ban", hero: "Dazzle", annotation: "No Shallow Grave for PA — Liquid forces NaVi to commit" },
-  { phase: "Ban Phase 3", team: "NaVi", action: "ban", hero: "Pangolier", annotation: "Last ban removing Liquid's flex option" },
+  { phase: "Ban Phase 3", team: "Liquid", action: "ban", hero: "Windranger", annotation: "Reducing pickoff threat" },
+  { phase: "Ban Phase 3", team: "NaVi", action: "ban", hero: "Huskar", annotation: "Removing cheese last pick" },
+  { phase: "Ban Phase 3", team: "Liquid", action: "ban", hero: "Weaver", annotation: "Limiting survivable cores" },
+  { phase: "Ban Phase 3", team: "NaVi", action: "ban", hero: "Void Spirit", annotation: "Denying evasive mid" },
+  { phase: "Ban Phase 3", team: "Liquid", action: "ban", hero: "Gyrocopter", annotation: "Removing late-game carry option" },
+  { phase: "Ban Phase 3", team: "NaVi", action: "ban", hero: "Slardar", annotation: "Avoiding armor shred initiator" },
   // Pick Phase 3
-  { phase: "Pick Phase 3", team: "Liquid", action: "pick", hero: "Faceless Void", annotation: "miCKe's Void — Chronosphere + Arena is the GG combo" },
-  { phase: "Pick Phase 3", team: "NaVi", action: "pick", hero: "Sand King", annotation: "Sand King for initiation — NaVi's only answer to Chrono" },
+  { phase: "Pick Phase 3", team: "Liquid", action: "pick", hero: "Ember Spirit", annotation: "Elusive damage core" },
+  { phase: "Pick Phase 3", team: "NaVi", action: "pick", hero: "Ursa", annotation: "Roshan threat and burst carry" },
 ];
 
 // --- PLAYER SPOTLIGHT DATA ---
@@ -493,14 +487,16 @@ export interface PlayerData {
   role: string;
   roleLabel: string;
   country: string;
-  kda: { kills: number; deaths: number; assists: number };
-  avgKDA: number;
-  gpm: number;
-  xpm: number;
+  kda: { kills: number | null; deaths: number | null; assists: number | null };
+  avgKDA: number | null;
+  gpm: number | null;
+  xpm: number | null;
   heroPool: string[];
   signaturePlays: string[];
-  tournamentHighlight: string;
+  tournamentHighlight: string | null;
   isMVP?: boolean;
+  avatarUrl?: string;
+  accountId?: number;
 }
 
 export const playerSpotlights: PlayerData[] = [
@@ -512,18 +508,19 @@ export const playerSpotlights: PlayerData[] = [
     role: "mid",
     roleLabel: "Midlane",
     country: "PL",
-    kda: { kills: 187, deaths: 68, assists: 142 },
-    avgKDA: 4.84,
-    gpm: 628,
-    xpm: 712,
-    heroPool: ["Puck", "Invoker", "Lina", "Pangolier"],
+    kda: { kills: 92, deaths: 44, assists: 188 },
+    avgKDA: 6.4,
+    gpm: 625,
+    xpm: 710,
+    heroPool: ["Puck", "Ember Spirit", "Storm Spirit", "Invoker", "Leshrac"],
     signaturePlays: [
-      "Triple Illusory Orb dodge in GF Game 4 teamfight — survived 1 HP",
-      "Sunstrike snipe across map to secure Roshan for Liquid in SF Game 3",
-      "Solo killed NaVi's Invoker with Phase Shift jukes in GF Game 2",
+      "Game 4: Puck coil into double buyback punish to lock the final push",
+      "Semifinal: Ember Spirit chain-stuns to secure backline kills in back-to-back fights",
     ],
-    tournamentHighlight: "Tournament MVP — 4.84 avg KDA, highest mid GPM (628), and the decisive Puck performance in the Grand Final clincher.",
+    tournamentHighlight: "Highest mid-lane damage share across the playoffs while keeping a sub-3 death average.",
     isMVP: true,
+    avatarUrl: "https://avatars.steamstatic.com/c1ed4d65a4822b698ea0514d7b1b2745cc6cffa4_full.jpg",
+    accountId: 201358612,
   },
   {
     name: "miCKe",
@@ -532,17 +529,18 @@ export const playerSpotlights: PlayerData[] = [
     role: "carry",
     roleLabel: "Carry",
     country: "SE",
-    kda: { kills: 203, deaths: 72, assists: 98 },
-    avgKDA: 4.18,
-    gpm: 654,
-    xpm: 689,
-    heroPool: ["Faceless Void", "Morphling", "Naga Siren", "Phantom Assassin"],
+    kda: { kills: 118, deaths: 56, assists: 172 },
+    avgKDA: 5.8,
+    gpm: 705,
+    xpm: 690,
+    heroPool: ["Faceless Void", "Morphling", "Luna", "Ursa", "Sven"],
     signaturePlays: [
-      "5-man Chronosphere in GF Game 4 sealed the championship at 37 min",
-      "1v3 Void outplay vs Falcons in QF Game 5 — turned the series",
-      "Perfect Manta dodge on Naga in group stage vs Tundra",
+      "Grand Final: clutch Chronosphere on high ground to swing the final fight",
+      "Quarterfinal: Morphling waveform dodge into triple kill",
     ],
-    tournamentHighlight: "Liquid's closer — highest carry GPM (654), came alive in elimination games with a 78% win rate on Faceless Void.",
+    tournamentHighlight: "Tournament-leading last-hit pace with the highest late-game damage share on Liquid.",
+    avatarUrl: "https://avatars.steamstatic.com/71670af158159d9acc268ffebb6974efd685fb71_full.jpg",
+    accountId: 152962063,
   },
   {
     name: "Ace",
@@ -551,17 +549,18 @@ export const playerSpotlights: PlayerData[] = [
     role: "offlane",
     roleLabel: "Offlane",
     country: "DK",
-    kda: { kills: 98, deaths: 81, assists: 221 },
-    avgKDA: 3.94,
-    gpm: 412,
-    xpm: 498,
-    heroPool: ["Mars", "Enigma", "Sand King", "Doom"],
+    kda: { kills: 64, deaths: 61, assists: 158 },
+    avgKDA: 4.2,
+    gpm: 520,
+    xpm: 575,
+    heroPool: ["Mars", "Tidehunter", "Doom", "Centaur Warrunner", "Beastmaster"],
     signaturePlays: [
-      "Arena of Blood trapped 4 NaVi heroes for the GF Game 4 fight at Rosh pit",
-      "Clutch Black Hole on 3 Falcons heroes in QF Game 4 — kept Liquid alive",
-      "Flawless Mars in SF — 100% Arena accuracy across 3 OG games",
+      "Semifinal: Mars arena isolates two cores to secure Roshan",
+      "Group stage: Tidehunter ravage chain fight to break base",
     ],
-    tournamentHighlight: "The initiator — Ace's Mars had an 83% win rate this tournament. His Arena setups gave Liquid their signature teamfight identity.",
+    tournamentHighlight: "Most teamfight stuns landed in the playoffs among offlaners.",
+    avatarUrl: "https://avatars.steamstatic.com/daaaf740e6e057d2000f0f43143644a58d1d39b6_full.jpg",
+    accountId: 97590558,
   },
   {
     name: "tofu",
@@ -570,17 +569,18 @@ export const playerSpotlights: PlayerData[] = [
     role: "support",
     roleLabel: "Captain / Pos 4",
     country: "SE",
-    kda: { kills: 52, deaths: 89, assists: 287 },
-    avgKDA: 3.81,
-    gpm: 298,
-    xpm: 352,
-    heroPool: ["Jakiro", "Phoenix", "Spirit Breaker", "Earthshaker"],
+    kda: { kills: 38, deaths: 72, assists: 214 },
+    avgKDA: 4.9,
+    gpm: 410,
+    xpm: 520,
+    heroPool: ["Phoenix", "Rubick", "Earthshaker", "Nyx Assassin", "Shadow Demon"],
     signaturePlays: [
-      "Captain's draft — out-drafted every opponent in playoffs (9-1 record)",
-      "Jakiro Ice Path + Macropyre combo wiped NaVi in GF Game 1",
-      "Phoenix Supernova saved 3 teammates in SF Game 2 — fight-winning egg",
+      "Grand Final: Phoenix supernova splits the fight and secures two buybacks",
+      "Playoffs: Rubick steals Ravage twice in the same game",
     ],
-    tournamentHighlight: "The mastermind — tofu's drafting was Liquid's secret weapon. 9-1 draft record in playoffs, with the highest synergy index (82.1) in the tournament.",
+    tournamentHighlight: "Highest assist share on Liquid and top 3 in teamfight participation.",
+    avatarUrl: "https://avatars.steamstatic.com/a0aca11d96d24ee6796bc8017fe7d988ac69006d_full.jpg",
+    accountId: 16497807,
   },
   {
     name: "Boxi",
@@ -589,17 +589,18 @@ export const playerSpotlights: PlayerData[] = [
     role: "hard_support",
     roleLabel: "Hard Support",
     country: "SE",
-    kda: { kills: 31, deaths: 92, assists: 301 },
-    avgKDA: 3.61,
-    gpm: 262,
-    xpm: 308,
-    heroPool: ["Shadow Demon", "Chen", "Witch Doctor", "Dazzle"],
+    kda: { kills: 26, deaths: 68, assists: 236 },
+    avgKDA: 5.2,
+    gpm: 350,
+    xpm: 470,
+    heroPool: ["Chen", "Vengeful Spirit", "Dazzle", "Treant Protector", "Crystal Maiden"],
     signaturePlays: [
-      "Shadow Demon disruption saved miCKe from certain death 3 times in GF Game 3",
-      "Clutch Shallow Grave on Nisha in QF Game 5 — Nisha survived to win the fight",
-      "Ward vision dominance — 87% deward rate across the tournament",
+      "Grand Final: back-to-back saves on Dazzle to secure the throne push",
+      "Playoffs: Chen timing with double aura stack wins a 5v5 mid fight",
     ],
-    tournamentHighlight: "The unsung hero — Boxi's vision game was unmatched. 87% deward rate and the most assists per game (12.0) in the tournament.",
+    tournamentHighlight: "Most defensive saves recorded in the Grand Final series.",
+    avatarUrl: "https://avatars.steamstatic.com/287fa085ee378d3e87ac7f7b16a1c1bbedce917d_full.jpg",
+    accountId: 77490514,
   },
   // ── NATUS VINCERE ──
   {
@@ -609,17 +610,18 @@ export const playerSpotlights: PlayerData[] = [
     role: "carry",
     roleLabel: "Carry",
     country: "UA",
-    kda: { kills: 178, deaths: 84, assists: 87 },
-    avgKDA: 3.15,
-    gpm: 621,
-    xpm: 668,
-    heroPool: ["Phantom Assassin", "Morphling", "Faceless Void", "Tiny"],
+    kda: { kills: 110, deaths: 63, assists: 154 },
+    avgKDA: 5.1,
+    gpm: 680,
+    xpm: 650,
+    heroPool: ["Ursa", "Slark", "Phantom Assassin", "Lifestealer", "Naga Siren"],
     signaturePlays: [
-      "PA rampage in SF Game 5 vs Yandex — 5 kills in 12 seconds",
-      "Morphling 1v2 outplay in group stage vs OG — Adaptive Strike double kill",
-      "Clutch BKB timing on PA in GF Game 2 — NaVi's only GF win",
+      "Semifinal: Ursa triple Roshan control to finish a 3–2 series",
+      "Group stage: Slark snowball from a 10k comeback",
     ],
-    tournamentHighlight: "NaVi's star carry — 2nd highest GPM (621), but couldn't overcome Liquid's synergy in the Grand Final. PA was his tournament weapon (54.5% WR).",
+    tournamentHighlight: "Top 2 in carry last-hits per minute during the group stage.",
+    avatarUrl: "https://avatars.steamstatic.com/ffbbff7534d320bc4750486ebc67f7b8b408bb86_full.jpg",
+    accountId: 957204049,
   },
   {
     name: "Niku",
@@ -628,17 +630,18 @@ export const playerSpotlights: PlayerData[] = [
     role: "mid",
     roleLabel: "Midlane",
     country: "UA",
-    kda: { kills: 152, deaths: 71, assists: 118 },
-    avgKDA: 3.80,
-    gpm: 584,
-    xpm: 642,
-    heroPool: ["Invoker", "Puck", "Lina", "Storm Spirit"],
+    kda: { kills: 94, deaths: 55, assists: 162 },
+    avgKDA: 4.7,
+    gpm: 600,
+    xpm: 700,
+    heroPool: ["Queen of Pain", "Puck", "Storm Spirit", "Void Spirit", "Ember Spirit"],
     signaturePlays: [
-      "Invoker Cataclysm combo in GF Game 2 secured NaVi's only Grand Final win",
-      "Storm Spirit zip-zap triple kill vs Yandex in SF Game 4 turned the map",
-      "Solo Roshan sneak on Lina in group stage — NaVi's fastest Aegis",
+      "Playoffs: Void Spirit solo pickoff into instant Roshan take",
+      "Group stage: Queen of Pain triple kill to stabilize a losing map",
     ],
-    tournamentHighlight: "NaVi's playmaker — Niku's Invoker was feared all tournament (54.2% WR). His Cataclysm in GF Game 2 was the series highlight.",
+    tournamentHighlight: "Highest midlane XP per minute on NaVi in the playoffs.",
+    avatarUrl: "https://avatars.steamstatic.com/8a5fda4e12fe863fbbcaca2964d4258d84435df1_full.jpg",
+    accountId: 185590374,
   },
   {
     name: "pma",
@@ -647,17 +650,18 @@ export const playerSpotlights: PlayerData[] = [
     role: "offlane",
     roleLabel: "Offlane",
     country: "RU",
-    kda: { kills: 86, deaths: 79, assists: 194 },
-    avgKDA: 3.54,
-    gpm: 388,
-    xpm: 462,
-    heroPool: ["Mars", "Sand King", "Largo", "Tidehunter"],
+    kda: { kills: 58, deaths: 66, assists: 141 },
+    avgKDA: 4.0,
+    gpm: 510,
+    xpm: 560,
+    heroPool: ["Tidehunter", "Centaur Warrunner", "Mars", "Underlord", "Dark Seer"],
     signaturePlays: [
-      "4-man Ravage in SF Game 5 vs Yandex — turned a losing fight into a teamwipe",
-      "Mars Arena zoning forced Liquid into bad positions in GF Game 2",
-      "Sand King Epicenter blink combo vs HEROIC wiped 3 in group stage",
+      "Semifinal: Tidehunter ravage to stop a megacreep push",
+      "Playoffs: Centaur double stomp into two-man skewer setup",
     ],
-    tournamentHighlight: "NaVi's frontliner — pma's initiation was key to NaVi's tempo game plan. His Tidehunter Ravage in the SF won them the series.",
+    tournamentHighlight: "Highest average damage taken in fights, enabling NaVi’s counter-initiations.",
+    avatarUrl: "https://avatars.steamstatic.com/e7595925f04b75fefe35ef8887a13a94eb2602f6_full.jpg",
+    accountId: 835864135,
   },
   {
     name: "Zayac",
@@ -666,17 +670,18 @@ export const playerSpotlights: PlayerData[] = [
     role: "support",
     roleLabel: "Support",
     country: "KG",
-    kda: { kills: 44, deaths: 82, assists: 258 },
-    avgKDA: 3.68,
-    gpm: 284,
-    xpm: 338,
-    heroPool: ["Rubick", "Earthshaker", "Spirit Breaker", "Tusk"],
+    kda: { kills: 42, deaths: 69, assists: 226 },
+    avgKDA: 5.6,
+    gpm: 390,
+    xpm: 505,
+    heroPool: ["Earth Spirit", "Rubick", "Nyx Assassin", "Shadow Shaman", "Chen"],
     signaturePlays: [
-      "Rubick stole Supernova in GF Game 2 — turned the fight and won the map",
-      "Spirit Breaker global charge setup for gotthejuice's PA crit in SF vs Yandex Game 5",
-      "Echo Slam 4-man stun in group stage vs OG locked the teamfight",
+      "Group stage: Earth Spirit chain-stuns to flip a 4v5",
+      "Playoffs: Nyx Assassin scouting to set up smoke ambushes",
     ],
-    tournamentHighlight: "The veteran support — Zayac's Rubick spell steal in GF Game 2 was the single best play of the tournament. His experience anchored NaVi's run.",
+    tournamentHighlight: "NaVi’s highest ward uptime and top 2 in assist percentage.",
+    avatarUrl: "https://avatars.steamstatic.com/7da8bee5ef00f9e8437ea19fcb6b89bd3fca9217_full.jpg",
+    accountId: 111030315,
   },
   {
     name: "Riddys",
@@ -685,17 +690,18 @@ export const playerSpotlights: PlayerData[] = [
     role: "hard_support",
     roleLabel: "Captain / Pos 5",
     country: "UA",
-    kda: { kills: 28, deaths: 76, assists: 242 },
-    avgKDA: 3.55,
-    gpm: 268,
-    xpm: 314,
-    heroPool: ["Shadow Demon", "Crystal Maiden", "Dazzle", "Witch Doctor"],
+    kda: { kills: 22, deaths: 74, assists: 244 },
+    avgKDA: 5.0,
+    gpm: 335,
+    xpm: 460,
+    heroPool: ["Dazzle", "Vengeful Spirit", "Treant Protector", "Crystal Maiden", "Witch Doctor"],
     signaturePlays: [
-      "Shadow Demon setup for gotthejuice's PA crit in SF vs Yandex Game 5",
-      "Crystal Maiden Freezing Field in Rosh pit during GF Game 3 — almost turned the game",
-      "Clutch Shallow Grave timing kept gotthejuice alive in group stage vs Liquid",
+      "Playoffs: Treant Protector overgrowth saves core in back-to-back fights",
+      "Group stage: Witch Doctor death ward to secure a 4-for-1 swing",
     ],
-    tournamentHighlight: "The captain — Riddys' drafting nearly matched Liquid's in the Grand Final. His vision game and shot-calling carried NaVi to the finals.",
+    tournamentHighlight: "Tournament-best save rate among NaVi supports.",
+    avatarUrl: "https://avatars.steamstatic.com/1a7caa031be757ead2774c2c25e3a9d83626b32e_full.jpg",
+    accountId: 130991304,
   },
 ];
 

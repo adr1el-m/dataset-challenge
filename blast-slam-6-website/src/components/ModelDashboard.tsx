@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
 import { modelResults } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
@@ -9,6 +10,22 @@ const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
 export default function ModelDashboard() {
   const { featureImportance, rocCurve, grandFinalPrediction } = modelResults;
+  const [isMobile, setIsMobile] = useState(false);
+  const rocRef = useRef<HTMLDivElement>(null);
+  const rocInView = useInView(rocRef, { once: true, margin: "-120px" });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 640px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    if (mq.addEventListener) mq.addEventListener("change", update);
+    else mq.addListener(update);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener("change", update);
+      else mq.removeListener(update);
+    };
+  }, []);
 
   return (
     <section id="model" className="relative py-20 sm:py-32 px-4 sm:px-6 minimap-grid">
@@ -70,8 +87,9 @@ export default function ModelDashboard() {
           >
             <h3 className="font-heading text-lg font-bold mb-1">ROC Curve</h3>
             <p className="text-xs text-dota-text-dim mb-4">Model discrimination ability — higher is better</p>
-            <div className="chart-container">
-              <Plot
+            <div className="chart-container" ref={rocRef}>
+              {rocInView ? (
+                <Plot
                 data={[
                   ...rocCurve.map((curve) => ({
                     type: "scatter" as const,
@@ -102,12 +120,17 @@ export default function ModelDashboard() {
                   paper_bgcolor: "transparent",
                   plot_bgcolor: "transparent",
                   font: { color: "#9ca3af" },
-                  height: 380,
+                  height: isMobile ? 300 : 380,
                   legend: { font: { color: "#9ca3af", size: 10 }, bgcolor: "transparent", x: 0.55, y: 0.15 },
                 }}
                 config={{ displayModeBar: false, responsive: true }}
-                style={{ width: "100%", height: "380px" }}
-              />
+                style={{ width: "100%", height: isMobile ? "300px" : "380px" }}
+                />
+              ) : (
+                <div className="h-[300px] sm:h-[380px] flex items-center justify-center text-xs text-dota-text-dim">
+                  Loading chart…
+                </div>
+              )}
             </div>
           </motion.div>
 
@@ -162,7 +185,7 @@ export default function ModelDashboard() {
 
             <div className="mt-6 p-3 rounded-lg bg-dota-gold/5 border border-dota-gold/20">
               <p className="text-xs text-dota-text-dim">
-                <span className="text-dota-gold font-semibold">Key finding:</span> Synergy Index has the strongest predictive power ({(featureImportance[0].importance * 100).toFixed(1)}%), supporting the thesis that draft cohesion — not raw aggression — separates champions.
+                <span className="text-dota-gold font-semibold">Model note:</span> This section reflects modelled feature importance from the project dataset, not official tournament statistics.
               </p>
             </div>
           </motion.div>
@@ -178,7 +201,7 @@ export default function ModelDashboard() {
         >
           <div className="text-center mb-6">
             <h3 className="font-heading text-xl sm:text-2xl font-bold mb-1">Grand Final Prediction</h3>
-            <p className="text-xs text-dota-text-dim">Pre-match model output — validated post-tournament</p>
+            <p className="text-xs text-dota-text-dim">Illustrative model output based on the project dataset</p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 mb-8">

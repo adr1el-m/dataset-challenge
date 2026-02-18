@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { tournamentStats } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
+import winningImage from "@/img/winning_image.jpg";
 
 const ParticleArena = dynamic(() => import("./ParticleArena"), { ssr: false });
 
@@ -42,12 +44,12 @@ function AnimatedNumber({ value, prefix = "", suffix = "", format = false, delay
 
 export default function HeroSection() {
   const { scrollY } = useScroll();
-  const titleY = useTransform(scrollY, [0, 500], [0, 100]);
-  const titleOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const titleY = useTransform(scrollY, [0, 500, 900], [0, 0, 100]);
+  const titleOpacity = useTransform(scrollY, [0, 500, 900], [1, 1, 0]);
   const bgScale = useTransform(scrollY, [0, 500], [1, 1.15]);
 
   return (
-    <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-16 sm:pt-20">
       <motion.div className="absolute inset-0" style={{ scale: bgScale }}>
         <ParticleArena />
       </motion.div>
@@ -126,6 +128,23 @@ export default function HeroSection() {
               </motion.p>
             </div>
           </motion.div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.3 }}
+          className="glass-card p-2 sm:p-3 mb-5 sm:mb-7"
+        >
+          <Image
+            src={winningImage}
+            alt="Team Liquid celebrating with Ace lifting the BLAST Slam VI trophy"
+            className="w-full h-auto rounded-xl"
+            priority
+          />
+          <div className="text-[10px] sm:text-xs text-dota-text-dim mt-2 text-center">
+            Team Liquid’s championship moment — Ace lifts the trophy after the Game 4 clincher.
+          </div>
         </motion.div>
 
         <motion.p

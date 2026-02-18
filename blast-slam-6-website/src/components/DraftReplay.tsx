@@ -146,7 +146,7 @@ export default function DraftReplay() {
             <div>
               <div className="text-xs font-mono text-dota-gold/60 mb-2 uppercase tracking-wider">Picks</div>
               <div className="flex gap-2 flex-wrap">
-                {[0, 1, 2, 3, 4].map((i) => {
+                {[0, 1, 2, 3, 4, 5, 6].map((i) => {
                   const pick = liquidPicks[i];
                   return (
                     <div
@@ -185,7 +185,7 @@ export default function DraftReplay() {
             <div>
               <div className="text-xs font-mono text-dota-gold/60 mb-2 uppercase tracking-wider">Picks</div>
               <div className="flex gap-2 flex-wrap justify-end">
-                {[0, 1, 2, 3, 4].map((i) => {
+                {[0, 1, 2, 3, 4, 5, 6].map((i) => {
                   const pick = naviPicks[i];
                   return (
                     <div
@@ -493,9 +493,9 @@ export default function DraftReplay() {
               </div>
               <div className="text-center mt-6 pt-4 border-t border-dota-border/20">
                 <p className="text-sm text-dota-gold font-mono">
-                  Liquid&apos;s synergy draft (Chrono + Arena + Ice Path + Supernova) overwhelmed NaVi&apos;s tempo lineup.
+                  Liquid closed Game 4 with Batrider, Shadow Demon, Earth Spirit, Dragon Knight, and Ember Spirit.
                 </p>
-                <p className="text-xs text-gray-500 mt-1">Result: Team Liquid wins 34–11 in 45 minutes for the championship.</p>
+                <p className="text-xs text-gray-500 mt-1">Result: Team Liquid win Game 4 in 32:27.</p>
               </div>
             </motion.div>
           )}

@@ -4,6 +4,16 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playerSpotlights, PlayerData } from "@/data/tournament";
 import { getHeroIcon, getPlayerAvatar } from "@/lib/assets";
+import ace from "@/img/Liquid/ace.jpg";
+import boxi from "@/img/Liquid/boxi.jpg";
+import m1cke from "@/img/Liquid/m1cke.jpg";
+import nisha from "@/img/Liquid/nisha.jpg";
+import tofu from "@/img/Liquid/tofu.jpg";
+import gotthejuice from "@/img/NaVi/gotthejuice.jpg";
+import niku from "@/img/NaVi/niku.jpg";
+import pma from "@/img/NaVi/pma.jpg";
+import riddys from "@/img/NaVi/riddys.jpg";
+import zayac from "@/img/NaVi/zayac.jpg";
 
 const ROLE_COLORS: Record<string, string> = {
   carry: "#ff6b6b",
@@ -11,6 +21,19 @@ const ROLE_COLORS: Record<string, string> = {
   offlane: "#6bcb77",
   support: "#4d96ff",
   hard_support: "#9b59b6",
+};
+
+const playerAvatarMap: Record<string, string> = {
+  Nisha: nisha.src,
+  miCKe: m1cke.src,
+  Ace: ace.src,
+  tofu: tofu.src,
+  Boxi: boxi.src,
+  gotthejuice: gotthejuice.src,
+  Niku: niku.src,
+  pma: pma.src,
+  Zayac: zayac.src,
+  Riddys: riddys.src,
 };
 
 function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
@@ -49,7 +72,7 @@ function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
               isLiquid ? "border-[#06b6d4]/40" : "border-[#eab308]/40"
             }`}>
               <img
-                src={getPlayerAvatar(player.name)}
+                src={playerAvatarMap[player.name] ?? getPlayerAvatar(player.name)}
                 alt={player.name}
                 className="w-full h-full object-cover bg-dota-surface/50"
               />

@@ -1,4 +1,9 @@
 <p align="center">
+  <img src="./blast-slam-6-website/src/img/winning_image.jpg" alt="Team Liquid lifting the BLAST Slam VI trophy" width="100%" />
+</p>
+<p align="center"><em>Team Liquid’s championship moment — Ace lifting the trophy after the Game 4 clincher.</em></p>
+
+<p align="center">
   <img src="./blast-slam-6-website/public/blast_slam_logo.png" alt="BLAST Slam VI" width="120" />
 </p>
 

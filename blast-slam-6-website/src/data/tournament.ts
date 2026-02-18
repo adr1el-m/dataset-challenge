@@ -466,31 +466,35 @@ export interface DraftAction {
 
 export const grandFinalDraft: DraftAction[] = [
   // Ban Phase 1
-  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Tiny", annotation: "Liquid removes NaVi's most-played hero (39 picks, 38.5% WR)" },
-  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Shadow Demon", annotation: "NaVi targets Liquid's signature support — 84% contest rate" },
-  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Largo", annotation: "Denying NaVi's offlane comfort pick" },
-  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Enigma", annotation: "Removing Liquid's high-winrate flex option (62.5% WR)" },
+  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Underlord" },
+  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Shadow Fiend" },
+  { phase: "Ban Phase 1", team: "Liquid", action: "ban", hero: "Viper" },
+  { phase: "Ban Phase 1", team: "NaVi", action: "ban", hero: "Treant Protector" },
   // Pick Phase 1
-  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Jakiro", annotation: "First pick Jakiro — tournament's most-contested support (86% contest rate)" },
-  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Invoker", annotation: "NaVi grabs their highest-WR mid (54.2%)" },
-  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Earthshaker", annotation: "Double up on team-fight control" },
-  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Mars", annotation: "Liquid's signature offlaner — Arena + Ice Path is devastating" },
+  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Batrider" },
+  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Tiny" },
+  { phase: "Pick Phase 1", team: "NaVi", action: "pick", hero: "Warlock" },
+  { phase: "Pick Phase 1", team: "Liquid", action: "pick", hero: "Shadow Demon" },
   // Ban Phase 2
-  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Chen", annotation: "Denying the 62.5% WR hard support" },
-  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Morphling", annotation: "Shutting down gotthejuice's carry pool" },
-  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Naga Siren", annotation: "No late-game insurance for Liquid" },
-  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Spirit Breaker", annotation: "Removing NaVi's global tempo enabler" },
+  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Disruptor" },
+  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Jakiro" },
+  { phase: "Ban Phase 2", team: "Liquid", action: "ban", hero: "Razor" },
+  { phase: "Ban Phase 2", team: "NaVi", action: "ban", hero: "Kez" },
   // Pick Phase 2
-  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Phantom Assassin", annotation: "gotthejuice's PA — high risk, high reward carry" },
-  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Phoenix", annotation: "Phoenix + Jakiro = double team-fight ultimates" },
-  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Rubick", annotation: "Rubick to steal Supernova or Ice Path — mind games" },
-  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Puck", annotation: "Nisha's Puck mid — elusive and aggressive" },
+  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Earth Spirit" },
+  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Mars" },
+  { phase: "Pick Phase 2", team: "NaVi", action: "pick", hero: "Puck" },
+  { phase: "Pick Phase 2", team: "Liquid", action: "pick", hero: "Dragon Knight" },
   // Ban Phase 3
-  { phase: "Ban Phase 3", team: "Liquid", action: "ban", hero: "Dazzle", annotation: "No Shallow Grave for PA — Liquid forces NaVi to commit" },
-  { phase: "Ban Phase 3", team: "NaVi", action: "ban", hero: "Pangolier", annotation: "Last ban removing Liquid's flex option" },
+  { phase: "Ban Phase 3", team: "Liquid", action: "ban", hero: "Windranger" },
+  { phase: "Ban Phase 3", team: "NaVi", action: "ban", hero: "Huskar" },
+  { phase: "Ban Phase 3", team: "Liquid", action: "ban", hero: "Weaver" },
+  { phase: "Ban Phase 3", team: "NaVi", action: "ban", hero: "Void Spirit" },
+  { phase: "Ban Phase 3", team: "Liquid", action: "ban", hero: "Gyrocopter" },
+  { phase: "Ban Phase 3", team: "NaVi", action: "ban", hero: "Slardar" },
   // Pick Phase 3
-  { phase: "Pick Phase 3", team: "Liquid", action: "pick", hero: "Faceless Void", annotation: "miCKe's Void — Chronosphere + Arena is the GG combo" },
-  { phase: "Pick Phase 3", team: "NaVi", action: "pick", hero: "Sand King", annotation: "Sand King for initiation — NaVi's only answer to Chrono" },
+  { phase: "Pick Phase 3", team: "Liquid", action: "pick", hero: "Ember Spirit" },
+  { phase: "Pick Phase 3", team: "NaVi", action: "pick", hero: "Ursa" },
 ];
 
 // --- PLAYER SPOTLIGHT DATA ---

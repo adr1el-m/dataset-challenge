@@ -154,7 +154,7 @@ export default function DraftSimulator() {
 
   // Liquid's actual GF draft for comparison
   const liquidDraft = useMemo(() => {
-    const liquidHeroNames = ["Jakiro", "Mars", "Phoenix", "Puck", "Faceless Void"];
+    const liquidHeroNames = ["Batrider", "Shadow Demon", "Earth Spirit", "Dragon Knight", "Ember Spirit"];
     const heroes: DotaHero[] = liquidHeroNames
       .map((name) => allDotaHeroes.find((h) => h.name === name))
       .filter((h): h is DotaHero => !!h);

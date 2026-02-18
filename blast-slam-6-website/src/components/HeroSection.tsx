@@ -1,27 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import dynamic from "next/dynamic";
 import { tournamentStats } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
 
 const ParticleArena = dynamic(() => import("./ParticleArena"), { ssr: false });
 
-const formatStatValue = (value: number | null) => (value === null ? "Not listed" : value);
 const stats = [
-  { label: "Teams", value: formatStatValue(tournamentStats.teamsParticipated), suffix: "" },
-  { label: "Total Games", value: formatStatValue(tournamentStats.totalGames), suffix: "" },
-  { label: "Prize Pool", value: formatStatValue(tournamentStats.prizePool), suffix: "", prefix: "$", format: true },
-  { label: "Location", value: tournamentStats.location, suffix: "" },
+  { label: "Teams", value: tournamentStats.teamsParticipated, suffix: "" },
+  { label: "Total Games", value: tournamentStats.totalGames, suffix: "" },
+  { label: "Comeback Rate", value: Math.round(tournamentStats.comebackRate * 100), suffix: "%" },
+  { label: "Prize Pool", value: tournamentStats.prizePool, suffix: "", prefix: "$", format: true },
 ];
 
-function AnimatedNumber({ value, prefix = "", suffix = "", format = false, delay = 0 }: { value: number | string; prefix?: string; suffix?: string; format?: boolean; delay?: number }) {
+function AnimatedNumber({ value, prefix = "", suffix = "", format = false, delay = 0 }: { value: number; prefix?: string; suffix?: string; format?: boolean; delay?: number }) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (typeof value !== "number") return;
       const duration = 2000;
       const start = performance.now();
       const tick = (now: number) => {
@@ -37,19 +35,16 @@ function AnimatedNumber({ value, prefix = "", suffix = "", format = false, delay
 
   return (
     <span>
-      {typeof value === "number"
-        ? `${prefix}${format ? count.toLocaleString() : count}${suffix}`
-        : `${prefix}${value}${suffix}`}
+      {prefix}{format ? count.toLocaleString() : count}{suffix}
     </span>
   );
 }
 
 export default function HeroSection() {
-  const reduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
-  const titleY = useTransform(scrollY, [0, 500], reduceMotion ? [0, 0] : [0, 100]);
-  const titleOpacity = useTransform(scrollY, [0, 400], reduceMotion ? [1, 1] : [1, 0]);
-  const bgScale = useTransform(scrollY, [0, 500], reduceMotion ? [1, 1] : [1, 1.15]);
+  const titleY = useTransform(scrollY, [0, 500], [0, 100]);
+  const titleOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const bgScale = useTransform(scrollY, [0, 500], [1, 1.15]);
 
   return (
     <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
@@ -62,12 +57,12 @@ export default function HeroSection() {
 
       <motion.div
         className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto"
-        style={{ y: reduceMotion ? 0 : titleY, opacity: reduceMotion ? 1 : titleOpacity }}
+        style={{ y: titleY, opacity: titleOpacity }}
       >
         <motion.h1
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reduceMotion ? 0 : 1, delay: reduceMotion ? 0 : 0.3, type: "spring", stiffness: 50 }}
+          transition={{ duration: 1, delay: 0.3, type: "spring", stiffness: 50 }}
           className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold tracking-tight leading-[0.9] mb-3"
         >
           <motion.span className="text-gradient-gold inline-block">
@@ -76,9 +71,9 @@ export default function HeroSection() {
           <br />
           <motion.span
             className="text-white inline-block"
-            initial={{ opacity: 0, x: reduceMotion ? 0 : -30 }}
+            initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.8, delay: reduceMotion ? 0 : 0.6 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
           >
             SLAM VI
           </motion.span>
@@ -87,7 +82,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reduceMotion ? 0 : 0.6, delay: reduceMotion ? 0 : 0.8 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blast-pink/10 border border-blast-pink/30 mb-6 sm:mb-8"
         >
           <span className="text-blast-pink text-xs font-semibold tracking-widest uppercase">
@@ -99,7 +94,7 @@ export default function HeroSection() {
         <motion.div
           initial={{ opacity: 0, scale: 0.8, filter: "blur(20px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          transition={{ duration: reduceMotion ? 0 : 1.2, delay: reduceMotion ? 0 : 0.9, type: "spring" }}
+          transition={{ duration: 1.2, delay: 0.9, type: "spring" }}
           className="mb-4"
         >
           <motion.p className="text-base sm:text-lg md:text-xl text-dota-text-dim font-light mb-2">
@@ -108,7 +103,7 @@ export default function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.8, delay: reduceMotion ? 0 : 1.2 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
             className="flex items-center justify-center gap-4"
           >
             <TeamLogo name="Team Liquid" size={56} className="sm:w-16 sm:h-16" />
@@ -116,15 +111,15 @@ export default function HeroSection() {
               <motion.h2
                 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black"
                 style={{ color: "#06b6d4" }}
-                animate={reduceMotion ? undefined : { textShadow: ["0 0 20px rgba(6,182,212,0)", "0 0 40px rgba(6,182,212,0.6)", "0 0 20px rgba(6,182,212,0)"] }}
-                transition={reduceMotion ? { duration: 0 } : { duration: 2.5, repeat: Infinity }}
+                animate={{ textShadow: ["0 0 20px rgba(6,182,212,0)", "0 0 40px rgba(6,182,212,0.6)", "0 0 20px rgba(6,182,212,0)"] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
               >
                 TEAM LIQUID
               </motion.h2>
               <motion.p
                 initial={{ opacity: 0, letterSpacing: "0em" }}
                 animate={{ opacity: 1, letterSpacing: "0.25em" }}
-                transition={{ duration: reduceMotion ? 0 : 1, delay: reduceMotion ? 0 : 1.5 }}
+                transition={{ duration: 1, delay: 1.5 }}
                 className="text-dota-gold text-sm font-bold uppercase"
               >
                 Champions
@@ -136,26 +131,28 @@ export default function HeroSection() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: reduceMotion ? 0 : 0.8, delay: reduceMotion ? 0 : 1.6 }}
+          transition={{ duration: 0.8, delay: 1.6 }}
           className="text-xs sm:text-sm text-dota-text-dim/80 mb-4 max-w-xl mx-auto"
         >
-          A decisive <span className="text-cyan-400 font-bold">3-1</span> Grand Final victory over Natus Vincere.
+          A dominant <span className="text-cyan-400 font-bold">3-1</span> Grand Final victory over Natus Vincere.{" "}
+          <span className="text-cyan-400 font-semibold">miCKe and Nisha</span> led from the front.{" "}
+          <span className="text-dota-gold font-semibold">Synergy conquered tempo.</span>
         </motion.p>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: reduceMotion ? 0 : 0.8, delay: reduceMotion ? 0 : 1.8 }}
+          transition={{ duration: 0.8, delay: 1.8 }}
           className="text-xs text-dota-text-dim/50 mb-6 sm:mb-8"
         >
-          A project summary based on official results and a modelled dataset.
+          A complete data-driven post-tournament analysis.
         </motion.p>
 
         {/* Grand Final Score */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reduceMotion ? 0 : 0.8, delay: reduceMotion ? 0 : 2.0 }}
+          transition={{ duration: 0.8, delay: 2.0 }}
           className="flex items-center justify-center gap-4 sm:gap-6 mb-8 sm:mb-10"
         >
           <motion.div whileHover={{ scale: 1.1 }} className="text-center">

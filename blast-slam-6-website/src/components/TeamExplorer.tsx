@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import { teams, type Team } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
 
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
 
-function RadarChart({ team, compareTeam, isMobile }: { team: Team; compareTeam?: Team; isMobile: boolean }) {
+function RadarChart({ team, compareTeam }: { team: Team; compareTeam?: Team }) {
   const categories = ["Win Rate", "Synergy", "Tempo", "Early Game", "Comeback", "First Blood"];
   const normalizeValue = (val: number, max: number) => (val / max) * 100;
 
@@ -30,7 +30,7 @@ function RadarChart({ team, compareTeam, isMobile }: { team: Team; compareTeam?:
       name: team.tag,
       fillcolor: `${team.color}20`,
       line: { color: team.color, width: 2 },
-      marker: { size: isMobile ? 4 : 6, color: team.color },
+      marker: { size: 6, color: team.color },
     },
   ];
 
@@ -51,7 +51,7 @@ function RadarChart({ team, compareTeam, isMobile }: { team: Team; compareTeam?:
       name: compareTeam.tag,
       fillcolor: `${compareTeam.color}20`,
       line: { color: compareTeam.color, width: 2 },
-      marker: { size: isMobile ? 4 : 6, color: compareTeam.color },
+      marker: { size: 6, color: compareTeam.color },
     });
   }
 
@@ -69,11 +69,11 @@ function RadarChart({ team, compareTeam, isMobile }: { team: Team; compareTeam?:
         paper_bgcolor: "transparent",
         plot_bgcolor: "transparent",
         font: { color: "#9ca3af", family: "system-ui" },
-        margin: { l: 40, r: 40, t: 30, b: 30 },
-        height: isMobile ? 300 : 380,
+        margin: { l: 60, r: 60, t: 40, b: 40 },
+        height: 380,
       }}
       config={{ displayModeBar: false, responsive: true }}
-      style={{ width: "100%", height: isMobile ? "300px" : "380px" }}
+      style={{ width: "100%", height: "380px" }}
     />
   );
 }
@@ -111,22 +111,6 @@ export default function TeamExplorer() {
   const [selectedTeam, setSelectedTeam] = useState<Team>(teams[0]);
   const [compareTeam, setCompareTeam] = useState<Team | null>(null);
   const [isComparing, setIsComparing] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const chartRef = useRef<HTMLDivElement>(null);
-  const chartInView = useInView(chartRef, { once: true, margin: "-120px" });
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(max-width: 640px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    if (mq.addEventListener) mq.addEventListener("change", update);
-    else mq.addListener(update);
-    return () => {
-      if (mq.removeEventListener) mq.removeEventListener("change", update);
-      else mq.removeListener(update);
-    };
-  }, []);
 
   const sortedTeams = useMemo(() => [...teams].sort((a, b) => {
     const placementPriority = (t: Team) => {
@@ -254,19 +238,9 @@ export default function TeamExplorer() {
                   )}
                 </div>
 
-              <div className="text-[11px] text-dota-text-dim mb-4">
-                Metrics below are modelled estimates from the project dataset.
-              </div>
-
-              <div className="chart-container mb-6" ref={chartRef}>
-                {chartInView ? (
-                  <RadarChart team={selectedTeam} compareTeam={compareTeam || undefined} isMobile={isMobile} />
-                ) : (
-                  <div className="h-[300px] sm:h-[380px] flex items-center justify-center text-xs text-dota-text-dim">
-                    Loading chart…
-                  </div>
-                )}
-              </div>
+                <div className="chart-container mb-6">
+                  <RadarChart team={selectedTeam} compareTeam={compareTeam || undefined} />
+                </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
                   {[

@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useReducedMotion } from "framer-motion";
 
-function Particles({ count = 600, animate }: { count?: number; animate: boolean }) {
+function Particles({ count = 600 }: { count?: number }) {
   const mesh = useRef<THREE.Points>(null);
 
   const [positions, colors, sizes] = useMemo(() => {
@@ -46,7 +45,6 @@ function Particles({ count = 600, animate }: { count?: number; animate: boolean 
   }, [count]);
 
   useFrame((state) => {
-    if (!animate) return;
     if (!mesh.current) return;
     const time = state.clock.getElapsedTime();
     mesh.current.rotation.y = time * 0.03;
@@ -98,11 +96,10 @@ function Particles({ count = 600, animate }: { count?: number; animate: boolean 
   );
 }
 
-function FloatingRing({ radius = 3, color = "#c3ff00", speed = 0.3, animate }: { radius?: number; color?: string; speed?: number; animate: boolean }) {
+function FloatingRing({ radius = 3, color = "#c3ff00", speed = 0.3 }: { radius?: number; color?: string; speed?: number }) {
   const ref = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
-    if (!animate) return;
     if (!ref.current) return;
     const t = state.clock.getElapsedTime();
     ref.current.rotation.x = t * speed;
@@ -118,38 +115,19 @@ function FloatingRing({ radius = 3, color = "#c3ff00", speed = 0.3, animate }: {
 }
 
 export default function ParticleArena() {
-  const reduceMotion = useReducedMotion();
-  const [isMobile, setIsMobile] = useState(false);
-  const shouldAnimate = !reduceMotion && !isMobile;
-  const particleCount = isMobile ? 200 : 420;
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(max-width: 640px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    if (mq.addEventListener) mq.addEventListener("change", update);
-    else mq.addListener(update);
-    return () => {
-      if (mq.removeEventListener) mq.removeEventListener("change", update);
-      else mq.removeListener(update);
-    };
-  }, []);
-
   return (
     <div className="absolute inset-0 z-0">
       <Canvas
         camera={{ position: [0, 0, 6], fov: 60 }}
-        dpr={isMobile ? [1, 1] : [1, 1.5]}
+        dpr={[1, 1.5]}
         gl={{ antialias: false, alpha: true }}
-        frameloop={shouldAnimate ? "always" : "demand"}
         style={{ background: "transparent" }}
       >
         <ambientLight intensity={0.3} />
-        <Particles count={particleCount} animate={shouldAnimate} />
-        <FloatingRing radius={3.5} color="#c3ff00" speed={0.2} animate={shouldAnimate} />
-        <FloatingRing radius={4.5} color="#ff1a6c" speed={0.15} animate={shouldAnimate} />
-        <FloatingRing radius={2.5} color="#1a2660" speed={0.25} animate={shouldAnimate} />
+        <Particles count={500} />
+        <FloatingRing radius={3.5} color="#c3ff00" speed={0.2} />
+        <FloatingRing radius={4.5} color="#ff1a6c" speed={0.15} />
+        <FloatingRing radius={2.5} color="#1a2660" speed={0.25} />
       </Canvas>
     </div>
   );

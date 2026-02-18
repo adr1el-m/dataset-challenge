@@ -2,10 +2,9 @@
 
 import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 import { heroMeta, modelResults, allDotaHeroes } from "@/data/tournament";
 import type { DotaHero } from "@/data/tournament";
-import { blurDataUrl, getHeroIcon } from "@/lib/assets";
+import { getHeroIcon } from "@/lib/assets";
 
 const ATTRIBUTES = ["All", "strength", "agility", "intelligence", "universal"] as const;
 const ATTRIBUTE_LABELS: Record<string, string> = {
@@ -251,20 +250,19 @@ export default function DraftSimulator() {
                     }`}
                   >
                     <div
-                      className={`w-11 h-11 rounded-lg overflow-hidden border-2 transition-all relative ${
+                      className={`w-11 h-11 rounded-lg overflow-hidden border-2 transition-all ${
                         selected
                           ? "border-dota-gold/60"
                           : "border-dota-border/20 group-hover:border-dota-gold/30"
                       }`}
                     >
-                      <Image
+                      <img
                         src={getHeroIcon(hero.name)}
                         alt={hero.name}
-                        fill
-                        sizes="44px"
-                        className="object-cover"
-                        placeholder="blur"
-                        blurDataURL={blurDataUrl}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).style.display = "none";
+                        }}
                       />
                     </div>
                     <span className="text-[9px] text-gray-400 truncate max-w-full leading-tight text-center">
@@ -346,14 +344,10 @@ export default function DraftSimulator() {
                             className="w-full h-full relative cursor-pointer"
                             onClick={() => toggleHero(hero)}
                           >
-                            <Image
+                            <img
                               src={getHeroIcon(hero.name)}
                               alt={hero.name}
-                              fill
-                              sizes="48px"
-                              className="object-cover"
-                              placeholder="blur"
-                              blurDataURL={blurDataUrl}
+                              className="w-full h-full object-cover"
                             />
                           </motion.div>
                         ) : (
@@ -439,16 +433,8 @@ export default function DraftSimulator() {
               </h3>
               <div className="flex items-center gap-2 mb-3">
                 {["Jakiro", "Mars", "Phoenix", "Puck", "Faceless Void"].map((hero) => (
-                  <div key={hero} className="w-8 h-8 rounded border border-[#06b6d4]/30 overflow-hidden relative">
-                    <Image
-                      src={getHeroIcon(hero)}
-                      alt={hero}
-                      fill
-                      sizes="32px"
-                      className="object-cover"
-                      placeholder="blur"
-                      blurDataURL={blurDataUrl}
-                    />
+                  <div key={hero} className="w-8 h-8 rounded border border-[#06b6d4]/30 overflow-hidden">
+                    <img src={getHeroIcon(hero)} alt={hero} className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>

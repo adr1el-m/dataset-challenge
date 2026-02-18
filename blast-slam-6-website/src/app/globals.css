@@ -256,23 +256,6 @@ body {
   animation: floatParticle 25s ease-in-out infinite reverse;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .scan-line::after,
-  .bg-particles::before,
-  .bg-particles::after,
-  .shimmer-overlay::after,
-  .float-slow {
-    animation: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .bg-particles::before,
-  .bg-particles::after {
-    animation: none;
-  }
-}
-
 .section-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(195, 255, 0, 0.2), transparent);

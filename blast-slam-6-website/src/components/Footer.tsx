@@ -1,8 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import { blurDataUrl } from "@/lib/assets";
-
 export default function Footer() {
   return (
     <footer className="relative py-12 sm:py-16 px-4 sm:px-6 border-t border-dota-border/20">
@@ -10,14 +7,12 @@ export default function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Image
+              <img
                 src="/blast_slam_logo.png"
                 alt="BLAST Slam VI"
-                width={96}
-                height={32}
                 className="h-8 w-auto object-contain"
-                placeholder="blur"
-                blurDataURL={blurDataUrl}
+                style={{ aspectRatio: "auto" }}
+                onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
               />
               <span className="font-heading font-bold text-lg">
                 <span className="text-dota-gold">BLAST</span>{" "}

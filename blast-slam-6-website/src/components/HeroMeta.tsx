@@ -2,12 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
-import { heroMetaByPhase, type HeroMeta as HeroMetaType } from "@/data/tournament";
-import { blurDataUrl, getHeroIcon } from "@/lib/assets";
+import { heroMeta, type HeroMeta as HeroMetaType } from "@/data/tournament";
+import { getHeroIcon } from "@/lib/assets";
 
 type RoleFilter = "all" | HeroMetaType["role"];
-type PhaseFilter = "overall" | "groups" | "playoffs" | "grandFinal";
 
 const roleColors: Record<string, string> = {
   carry: "#c3ff00",
@@ -26,29 +24,17 @@ const roleLabels: Record<string, string> = {
   hard_support: "Hard Support",
 };
 
-const phaseLabels: Record<PhaseFilter, string> = {
-  overall: "Overall",
-  groups: "Group Stage",
-  playoffs: "Playoffs",
-  grandFinal: "Grand Final",
-};
-
 function HeroIcon({ name, size = 24 }: { name: string; size?: number }) {
-  const [failed, setFailed] = useState(false);
-  if (failed) {
-    return <span className="rounded-sm bg-dota-surface/40 shrink-0" style={{ width: size, height: size }} />;
-  }
   return (
-    <Image
+    <img
       src={getHeroIcon(name)}
       alt={name}
       width={size}
       height={size}
       className="rounded-sm object-cover shrink-0"
       style={{ width: size, height: size }}
-      placeholder="blur"
-      blurDataURL={blurDataUrl}
-      onError={() => setFailed(true)}
+      loading="lazy"
+      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
     />
   );
 }
@@ -57,24 +43,19 @@ export default function HeroMeta() {
   const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
   const [sortBy, setSortBy] = useState<"contestRate" | "winRate" | "picks">("contestRate");
   const [hoveredHero, setHoveredHero] = useState<string | null>(null);
-  const [phaseFilter, setPhaseFilter] = useState<PhaseFilter>("overall");
-
-  const phaseData = heroMetaByPhase[phaseFilter];
-  const hasPhaseData = Array.isArray(phaseData) && phaseData.length > 0;
-  const heroSource = useMemo(() => (hasPhaseData ? phaseData : []), [hasPhaseData, phaseData]);
 
   const filteredHeroes = useMemo(() => {
-    const filtered = roleFilter === "all" ? heroSource : heroSource.filter((h) => h.role === roleFilter);
+    const filtered = roleFilter === "all" ? heroMeta : heroMeta.filter((h) => h.role === roleFilter);
     return [...filtered].sort((a, b) => {
       if (sortBy === "picks") return b.picks - a.picks;
       return b[sortBy] - a[sortBy];
     });
-  }, [heroSource, roleFilter, sortBy]);
+  }, [roleFilter, sortBy]);
 
-  const topContested = useMemo(() => [...heroSource].sort((a, b) => b.contestRate - a.contestRate).slice(0, 10), [heroSource]);
+  const topContested = useMemo(() => [...heroMeta].sort((a, b) => b.contestRate - a.contestRate).slice(0, 10), []);
 
   // Quadrant data for Win Rate vs Pick Rate
-  const eligible = useMemo(() => heroSource.filter((h) => h.picks >= 10), [heroSource]);
+  const eligible = useMemo(() => heroMeta.filter((h) => h.picks >= 10), []);
   const pickMedian = 20; // ~median picks among eligible
   const quadrants = useMemo(() => {
     const metaFavorites = eligible
@@ -119,30 +100,9 @@ export default function HeroMeta() {
             Who Rules the Meta?
           </h2>
           <p className="text-dota-text-dim max-w-xl mx-auto text-sm sm:text-base">
-            Phase filters show available stats; some phases are not listed on Liquipedia.
+            Complete hero pick/ban data across all <span className="text-dota-gold">100 games</span> — the meta that crowned Team Liquid champions.
           </p>
         </motion.div>
-
-        <div className="flex flex-wrap justify-center gap-2 mb-10">
-          {(Object.keys(phaseLabels) as PhaseFilter[]).map((phase) => {
-            const isActive = phaseFilter === phase;
-            const isAvailable = Array.isArray(heroMetaByPhase[phase]) && heroMetaByPhase[phase]?.length;
-            return (
-              <button
-                key={phase}
-                onClick={() => setPhaseFilter(phase)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                  isActive
-                    ? "bg-dota-gold/20 text-dota-gold border border-dota-gold/30"
-                    : "bg-dota-surface/50 text-dota-text-dim border border-dota-border/30 hover:border-dota-border/60"
-                }`}
-              >
-                {phaseLabels[phase]}
-                {!isAvailable && phase !== "overall" ? " • Not listed" : ""}
-              </button>
-            );
-          })}
-        </div>
 
         {/* Charts Row */}
         <div className="grid md:grid-cols-2 gap-4 sm:gap-6 mb-12">
@@ -156,9 +116,6 @@ export default function HeroMeta() {
             <h3 className="font-heading text-lg font-bold mb-1">Most Contested Heroes</h3>
             <p className="text-xs text-dota-text-dim mb-4">Pick + Ban Rate (top 10)</p>
             <div className="space-y-2">
-              {!hasPhaseData && (
-                <div className="text-xs text-dota-text-dim">Stats not listed for this phase.</div>
-              )}
               {topContested.map((hero, i) => {
                 const pct = hero.contestRate * 100;
                 const color = roleColors[hero.role] || "#64748b";
@@ -237,9 +194,6 @@ export default function HeroMeta() {
             <p className="text-xs text-dota-text-dim mb-4">Heroes with 10+ picks grouped by performance quadrant</p>
 
             <div className="grid grid-cols-2 gap-3">
-              {!hasPhaseData && (
-                <div className="text-xs text-dota-text-dim col-span-2">Stats not listed for this phase.</div>
-              )}
               {/* Meta Favorites — High WR, High Picks */}
               <div className="p-3 rounded-lg bg-dota-gold/[0.04] border border-dota-gold/15">
                 <div className="flex items-center gap-2 mb-2.5">
@@ -393,24 +347,21 @@ export default function HeroMeta() {
           </div>
 
           <div className="overflow-x-auto -mx-4 sm:mx-0">
-            {!hasPhaseData ? (
-              <div className="text-xs text-dota-text-dim px-4 sm:px-0">Hero stats not listed for this phase.</div>
-            ) : (
-              <table className="w-full text-sm min-w-[640px]">
-                <thead>
-                  <tr className="text-left text-dota-text-dim text-xs uppercase tracking-wider border-b border-dota-border/30">
-                    <th className="pb-3 pr-4 pl-4 sm:pl-0">#</th>
-                    <th className="pb-3 pr-4">Hero</th>
-                    <th className="pb-3 pr-4">Role</th>
-                    <th className="pb-3 pr-4 text-center">Picks</th>
-                    <th className="pb-3 pr-4 text-center">Bans</th>
-                    <th className="pb-3 pr-4 text-center">Win Rate</th>
-                    <th className="pb-3 pr-4">Contest Rate</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <AnimatePresence mode="popLayout">
-                    {filteredHeroes.map((hero, i) => (
+            <table className="w-full text-sm min-w-[640px]">
+              <thead>
+                <tr className="text-left text-dota-text-dim text-xs uppercase tracking-wider border-b border-dota-border/30">
+                  <th className="pb-3 pr-4 pl-4 sm:pl-0">#</th>
+                  <th className="pb-3 pr-4">Hero</th>
+                  <th className="pb-3 pr-4">Role</th>
+                  <th className="pb-3 pr-4 text-center">Picks</th>
+                  <th className="pb-3 pr-4 text-center">Bans</th>
+                  <th className="pb-3 pr-4 text-center">Win Rate</th>
+                  <th className="pb-3 pr-4">Contest Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <AnimatePresence mode="popLayout">
+                  {filteredHeroes.map((hero, i) => (
                     <motion.tr
                       key={hero.name}
                       layout
@@ -463,10 +414,9 @@ export default function HeroMeta() {
                       </td>
                     </motion.tr>
                   ))}
-                  </AnimatePresence>
-                </tbody>
-              </table>
-            )}
+                </AnimatePresence>
+              </tbody>
+            </table>
           </div>
 
           <motion.div

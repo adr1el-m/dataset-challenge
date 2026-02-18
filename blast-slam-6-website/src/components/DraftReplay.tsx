@@ -146,7 +146,7 @@ export default function DraftReplay() {
             <div>
               <div className="text-xs font-mono text-dota-gold/60 mb-2 uppercase tracking-wider">Picks</div>
               <div className="flex gap-2 flex-wrap">
-                {[0, 1, 2, 3, 4, 5, 6].map((i) => {
+                {[0, 1, 2, 3, 4].map((i) => {
                   const pick = liquidPicks[i];
                   return (
                     <div
@@ -185,7 +185,7 @@ export default function DraftReplay() {
             <div>
               <div className="text-xs font-mono text-dota-gold/60 mb-2 uppercase tracking-wider">Picks</div>
               <div className="flex gap-2 flex-wrap justify-end">
-                {[0, 1, 2, 3, 4, 5, 6].map((i) => {
+                {[0, 1, 2, 3, 4].map((i) => {
                   const pick = naviPicks[i];
                   return (
                     <div

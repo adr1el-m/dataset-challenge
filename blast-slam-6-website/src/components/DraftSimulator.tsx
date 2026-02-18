@@ -432,7 +432,7 @@ export default function DraftSimulator() {
                 vs Liquid&apos;s GF Draft
               </h3>
               <div className="flex items-center gap-2 mb-3">
-                {["Jakiro", "Mars", "Phoenix", "Puck", "Faceless Void"].map((hero) => (
+                {["Batrider", "Shadow Demon", "Earth Spirit", "Dragon Knight", "Ember Spirit"].map((hero) => (
                   <div key={hero} className="w-8 h-8 rounded border border-[#06b6d4]/30 overflow-hidden">
                     <img src={getHeroIcon(hero)} alt={hero} className="w-full h-full object-cover" />
                   </div>

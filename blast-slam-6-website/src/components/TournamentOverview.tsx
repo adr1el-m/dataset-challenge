@@ -56,6 +56,21 @@ export default function TournamentOverview() {
   /* ── Bracket ref for connector lines ── */
   const bracketRef = useRef<HTMLDivElement>(null);
   const [lines, setLines] = useState<{ x1: number; y1: number; x2: number; y2: number }[]>([]);
+  const lastMinute = goldTimeline.minutes[goldTimeline.minutes.length - 1] ?? 0;
+
+  const getGoldAtMinute = (minute: number) => {
+    const minutes = goldTimeline.minutes;
+    if (minutes.length === 0) return 0;
+    const idx = minutes.findIndex((m) => m >= minute);
+    if (idx === -1) return goldTimeline.goldDiff[minutes.length - 1] ?? 0;
+    if (idx === 0) return goldTimeline.goldDiff[0] ?? 0;
+    const m0 = minutes[idx - 1];
+    const m1 = minutes[idx];
+    const g0 = goldTimeline.goldDiff[idx - 1] ?? 0;
+    const g1 = goldTimeline.goldDiff[idx] ?? 0;
+    const t = (minute - m0) / (m1 - m0 || 1);
+    return g0 + (g1 - g0) * t;
+  };
 
   useEffect(() => {
     function calcLines() {
@@ -275,7 +290,7 @@ export default function TournamentOverview() {
         title: { text: "Game Time (minutes)", font: { size: 11 } },
         tickfont: { color: "#9ca3af", size: 10 },
         gridcolor: "rgba(30,37,80,0.3)",
-        range: [0, 46],
+        range: [0, lastMinute + 1],
         spikemode: "across" as const,
         spikesnap: "cursor" as const,
         spikecolor: "rgba(195,255,0,0.5)",
@@ -309,9 +324,9 @@ export default function TournamentOverview() {
             zerolinecolor: "rgba(195,255,0,0.3)",
             zerolinewidth: 1.5,
           },
-          annotations: goldTimeline.events.map((e) => ({
+          annotations: goldTimeline.events.map((e, i) => ({
             x: e.minute,
-            y: goldTimeline.goldDiff[goldTimeline.minutes.indexOf(e.minute)] || 0,
+            y: getGoldAtMinute(e.minute),
             text: e.text,
             showarrow: true,
             arrowhead: 2,
@@ -321,8 +336,8 @@ export default function TournamentOverview() {
             bgcolor: "rgba(6,9,26,0.92)",
             bordercolor: e.type === "radiant" ? "rgba(195,255,0,0.25)" : "rgba(255,26,108,0.25)",
             borderpad: 4,
-            ax: 0,
-            ay: e.type === "radiant" ? -35 : 30,
+            ax: i % 3 === 0 ? -12 : i % 3 === 2 ? 12 : 0,
+            ay: i % 2 === 0 ? -48 : 40,
           })),
         };
       case "networth":
@@ -434,7 +449,7 @@ export default function TournamentOverview() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
             <div>
               <h3 className="font-heading text-lg sm:text-xl font-bold flex items-center gap-2">
-                Gold Difference Timeline
+                Game 4 Momentum Timeline
               </h3>
               <p className="text-xs text-dota-text-dim">{goldTimeline.matchContext}</p>
             </div>
@@ -483,13 +498,15 @@ export default function TournamentOverview() {
           </div>
 
           {/* The chart */}
-          <div className="chart-container">
-            <Plot
-              data={getPlotData() as Plotly.Data[]}
-              layout={getLayout() as Partial<Plotly.Layout>}
-              config={{ displayModeBar: false, responsive: true }}
-              style={{ width: "100%", height: "400px" }}
-            />
+          <div className="-mx-4 sm:-mx-6 overflow-x-auto">
+            <div className="chart-container min-w-[960px] sm:min-w-0">
+              <Plot
+                data={getPlotData() as Plotly.Data[]}
+                layout={getLayout() as Partial<Plotly.Layout>}
+                config={{ displayModeBar: false, responsive: true }}
+                style={{ width: "100%", height: "440px" }}
+              />
+            </div>
           </div>
 
           {/* Summary stat cards */}

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/blast_slam_logo.png" alt="BLAST Slam VI" width="120" />
+  <img src="./blast-slam-6-website/public/blast_slam_logo.png" alt="BLAST Slam VI" width="120" />
 </p>
 
 <h1 align="center">BLAST Slam VI — Dota 2 Tournament Analytics</h1>
@@ -30,20 +30,20 @@ Twelve of the world's best Dota 2 teams battled across 100 games. This website p
 
 <table>
   <tr>
-    <td align="center"><img src="public/teams/liquid.png" width="40"/><br/><strong>Team Liquid</strong><br/><sub>🏆 Champion</sub></td>
-    <td align="center"><img src="public/teams/navi.png" width="40"/><br/><strong>Natus Vincere</strong><br/><sub>🥈 2nd Place</sub></td>
-    <td align="center"><img src="public/teams/og.png" width="40"/><br/><strong>OG</strong><br/><sub>3rd–4th</sub></td>
-    <td align="center"><img src="public/teams/yandex.png" width="40"/><br/><strong>Team Yandex</strong><br/><sub>3rd–4th</sub></td>
-    <td align="center"><img src="public/teams/falcons.png" width="40"/><br/><strong>Team Falcons</strong><br/><sub>5th–8th</sub></td>
-    <td align="center"><img src="public/teams/heroic.png" width="40"/><br/><strong>HEROIC</strong><br/><sub>5th–8th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/liquid.png" width="40"/><br/><strong>Team Liquid</strong><br/><sub>🏆 Champion</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/navi.png" width="40"/><br/><strong>Natus Vincere</strong><br/><sub>🥈 2nd Place</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/og.png" width="40"/><br/><strong>OG</strong><br/><sub>3rd–4th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/yandex.png" width="40"/><br/><strong>Team Yandex</strong><br/><sub>3rd–4th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/falcons.png" width="40"/><br/><strong>Team Falcons</strong><br/><sub>5th–8th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/heroic.png" width="40"/><br/><strong>HEROIC</strong><br/><sub>5th–8th</sub></td>
   </tr>
   <tr>
-    <td align="center"><img src="public/teams/tundra.png" width="40"/><br/><strong>Tundra Esports</strong><br/><sub>5th–8th</sub></td>
-    <td align="center"><img src="public/teams/xtreme_gaming.png" width="40"/><br/><strong>Xtreme Gaming</strong><br/><sub>5th–8th</sub></td>
-    <td align="center"><img src="public/teams/spirit.png" width="40"/><br/><strong>Team Spirit</strong><br/><sub>9th–12th</sub></td>
-    <td align="center"><img src="public/teams/gamer_legion.png" width="40"/><br/><strong>GamerLegion</strong><br/><sub>9th–12th</sub></td>
-    <td align="center"><img src="public/teams/mouz.png" width="40"/><br/><strong>MOUZ</strong><br/><sub>9th–12th</sub></td>
-    <td align="center"><img src="public/teams/rekonix.png" width="40"/><br/><strong>REKONIX</strong><br/><sub>9th–12th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/tundra.png" width="40"/><br/><strong>Tundra Esports</strong><br/><sub>5th–8th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/xtreme_gaming.png" width="40"/><br/><strong>Xtreme Gaming</strong><br/><sub>5th–8th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/spirit.png" width="40"/><br/><strong>Team Spirit</strong><br/><sub>9th–12th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/gamer_legion.png" width="40"/><br/><strong>GamerLegion</strong><br/><sub>9th–12th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/mouz.png" width="40"/><br/><strong>MOUZ</strong><br/><sub>9th–12th</sub></td>
+    <td align="center"><img src="./blast-slam-6-website/public/teams/rekonix.png" width="40"/><br/><strong>REKONIX</strong><br/><sub>9th–12th</sub></td>
   </tr>
 </table>
 

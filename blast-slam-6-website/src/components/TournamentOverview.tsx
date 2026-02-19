@@ -5,8 +5,12 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { tournamentStats, matches, goldTimeline, playoffBracket } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
+import ErrorBoundary from "./ErrorBoundary";
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+const Plot = dynamic(() => import("react-plotly.js"), {
+  ssr: false,
+  loading: () => <div className="w-full h-[440px] rounded-lg bg-dota-surface/50 border border-dota-border/20 shimmer-overlay" />,
+});
 
 /* ───────────────────────────────────────
    BRACKET MATCH ROW (compact inline card)
@@ -73,9 +77,10 @@ export default function TournamentOverview() {
   };
 
   useEffect(() => {
-    function calcLines() {
-      const container = bracketRef.current;
-      if (!container) return;
+    const container = bracketRef.current;
+    if (!container) return;
+
+    const calcLines = () => {
       const rect = container.getBoundingClientRect();
       const cards = container.querySelectorAll<HTMLElement>("[data-bracket]");
       const pos: Record<string, DOMRect> = {};
@@ -91,7 +96,6 @@ export default function TournamentOverview() {
         midY: r.top - rect.top + r.height / 2,
       });
 
-      // QF0 → SF0
       if (pos["qf-0"] && pos["sf-0"]) {
         const qf0 = rel(pos["qf-0"]);
         const sf0 = rel(pos["sf-0"]);
@@ -101,7 +105,6 @@ export default function TournamentOverview() {
         newLines.push({ x1: midX, y1: sf0.midY, x2: sf0.left, y2: sf0.midY });
       }
 
-      // QF1 → SF1
       if (pos["qf-1"] && pos["sf-1"]) {
         const qf1 = rel(pos["qf-1"]);
         const sf1 = rel(pos["sf-1"]);
@@ -111,7 +114,6 @@ export default function TournamentOverview() {
         newLines.push({ x1: midX, y1: sf1.midY, x2: sf1.left, y2: sf1.midY });
       }
 
-      // SF0 → GF, SF1 → GF
       if (pos["sf-0"] && pos["sf-1"] && pos["gf-0"]) {
         const s0 = rel(pos["sf-0"]);
         const s1 = rel(pos["sf-1"]);
@@ -125,15 +127,16 @@ export default function TournamentOverview() {
       }
 
       setLines(newLines);
-    }
+    };
 
     calcLines();
+    const resizeObserver = new ResizeObserver(() => calcLines());
+    resizeObserver.observe(container);
     window.addEventListener("resize", calcLines);
-    // Recalc after animations settle
-    const t = setTimeout(calcLines, 600);
+
     return () => {
       window.removeEventListener("resize", calcLines);
-      clearTimeout(t);
+      resizeObserver.disconnect();
     };
   }, []);
 
@@ -500,12 +503,16 @@ export default function TournamentOverview() {
           {/* The chart */}
           <div className="-mx-4 sm:-mx-6 overflow-x-auto">
             <div className="chart-container min-w-[960px] sm:min-w-0">
-              <Plot
-                data={getPlotData() as Plotly.Data[]}
-                layout={getLayout() as Partial<Plotly.Layout>}
-                config={{ displayModeBar: false, responsive: true }}
-                style={{ width: "100%", height: "440px" }}
-              />
+              <ErrorBoundary
+                fallback={<div className="w-full h-[440px] rounded-lg bg-dota-surface/50 border border-dota-border/20" />}
+              >
+                <Plot
+                  data={getPlotData() as Plotly.Data[]}
+                  layout={getLayout() as Partial<Plotly.Layout>}
+                  config={{ displayModeBar: false, responsive: true }}
+                  style={{ width: "100%", height: "440px" }}
+                />
+              </ErrorBoundary>
             </div>
           </div>
 

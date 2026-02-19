@@ -81,7 +81,7 @@ const heroInternalNames: Record<string, string> = {
   "Treant Protector": "treant",
   "Troll Warlord": "troll_warlord",
   "Underlord": "abyssal_underlord",
-  "Vengeful Spirit": "vengeful_spirit",
+  "Vengeful Spirit": "vengefulspirit",
   "Void Spirit": "void_spirit",
   "Windranger": "windrunner",
   "Winter Wyvern": "winter_wyvern",
@@ -98,7 +98,10 @@ const heroInternalNames: Record<string, string> = {
   "Earth Spirit": "earth_spirit",
   "Ember Spirit": "ember_spirit",
   "Legion Commander": "legion_commander",
+  "Kez": "kez",
+  "Muerta": "muerta",
   "Primal Beast": "primal_beast",
+  "Ringmaster": "ringmaster",
   "Ancient Apparition": "ancient_apparition",
 };
 

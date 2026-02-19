@@ -6,9 +6,13 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { tournamentStats } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
+import ErrorBoundary from "./ErrorBoundary";
 import winningImage from "@/img/winning_image.jpg";
 
-const ParticleArena = dynamic(() => import("./ParticleArena"), { ssr: false });
+const ParticleArena = dynamic(() => import("./ParticleArena"), {
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-dota-bg/60 shimmer-overlay" />,
+});
 
 const stats = [
   { label: "Teams", value: tournamentStats.teamsParticipated, suffix: "" },
@@ -51,7 +55,11 @@ export default function HeroSection() {
   return (
     <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-16 sm:pt-20">
       <motion.div className="absolute inset-0" style={{ scale: bgScale }}>
-        <ParticleArena />
+        <ErrorBoundary
+          fallback={<div className="w-full h-full bg-dota-bg/70 border border-dota-border/20" />}
+        >
+          <ParticleArena />
+        </ErrorBoundary>
       </motion.div>
 
       <div className="absolute inset-0 scan-line z-[1] pointer-events-none" />

@@ -143,7 +143,9 @@ export default function PredictTheWinner() {
                   </div>
                   <div className="w-px h-8 bg-dota-border/30" />
                   <div className="text-center">
-                    <div className="text-2xl font-heading font-bold text-blast-pink">61.2%</div>
+                    <div className="text-2xl font-heading font-bold text-blast-pink">
+                      {(modelResults.xgbAccuracy * 100).toFixed(2)}%
+                    </div>
                     <div className="text-[10px] text-dota-text-dim uppercase tracking-wider">ML Accuracy</div>
                   </div>
                   <div className="w-px h-8 bg-dota-border/30" />
@@ -418,4 +420,3 @@ export default function PredictTheWinner() {
     </section>
   );
 }
-

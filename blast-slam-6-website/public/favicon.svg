@@ -1,4 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-  <rect width="256" height="256" fill="transparent"/>
-  <image href="/blast_slam_logo.png" x="0" y="0" width="256" height="256" preserveAspectRatio="xMidYMid meet" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#06091A"/>
+      <stop offset="0.55" stop-color="#131836"/>
+      <stop offset="1" stop-color="#06091A"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="48" y1="60" x2="208" y2="196" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C3FF00"/>
+      <stop offset="0.5" stop-color="#D4FF4D"/>
+      <stop offset="1" stop-color="#C3FF00"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="52" fill="url(#bg)"/>
+  <rect x="24" y="24" width="208" height="208" rx="40" fill="#0D1128" stroke="#1E2550" stroke-width="3"/>
+  <path d="M64 164L128 56L192 164H168L128 96L88 164H64Z" fill="url(#gold)"/>
+  <rect x="88" y="170" width="80" height="12" rx="6" fill="#FF1A6C"/>
 </svg>

@@ -221,7 +221,7 @@ export default function KeyFindings() {
             Liquid&apos;s 82.1 synergy index coupled with a 1.15 synergy-to-tempo ratio translated to a{" "}
             <span className="text-dota-gold font-semibold">75% series win rate</span> through playoffs.
             Meanwhile, NaVi&apos;s league-high 78.4 tempo rating yielded only a{" "}
-            <span className="text-blast-pink font-semibold">2-3 record in the Grand Final</span>.
+            <span className="text-blast-pink font-semibold">1-3 record in the Grand Final</span>.
             The data is clear: draft cohesion is a stronger predictor of tournament success than pace of play.
           </p>
         </motion.div>

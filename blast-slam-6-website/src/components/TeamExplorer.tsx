@@ -5,8 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import { teams, type Team } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
+import ErrorBoundary from "./ErrorBoundary";
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+const Plot = dynamic(() => import("react-plotly.js"), {
+  ssr: false,
+  loading: () => <div className="w-full h-[380px] rounded-lg bg-dota-surface/50 border border-dota-border/20 shimmer-overlay" />,
+});
 
 function RadarChart({ team, compareTeam }: { team: Team; compareTeam?: Team }) {
   const categories = ["Win Rate", "Synergy", "Tempo", "Early Game", "Comeback", "First Blood"];
@@ -239,7 +243,11 @@ export default function TeamExplorer() {
                 </div>
 
                 <div className="chart-container mb-6">
-                  <RadarChart team={selectedTeam} compareTeam={compareTeam || undefined} />
+                  <ErrorBoundary
+                    fallback={<div className="w-full h-[380px] rounded-lg bg-dota-surface/50 border border-dota-border/20" />}
+                  >
+                    <RadarChart team={selectedTeam} compareTeam={compareTeam || undefined} />
+                  </ErrorBoundary>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">

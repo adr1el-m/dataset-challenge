@@ -4,8 +4,12 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { modelResults } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
+import ErrorBoundary from "./ErrorBoundary";
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+const Plot = dynamic(() => import("react-plotly.js"), {
+  ssr: false,
+  loading: () => <div className="w-full h-[380px] rounded-lg bg-dota-surface/50 border border-dota-border/20 shimmer-overlay" />,
+});
 
 export default function ModelDashboard() {
   const { featureImportance, rocCurve, grandFinalPrediction } = modelResults;
@@ -71,7 +75,10 @@ export default function ModelDashboard() {
             <h3 className="font-heading text-lg font-bold mb-1">ROC Curve</h3>
             <p className="text-xs text-dota-text-dim mb-4">Model discrimination ability — higher is better</p>
             <div className="chart-container">
-              <Plot
+              <ErrorBoundary
+                fallback={<div className="w-full h-[380px] rounded-lg bg-dota-surface/50 border border-dota-border/20" />}
+              >
+                <Plot
                 data={[
                   ...rocCurve.map((curve) => ({
                     type: "scatter" as const,
@@ -108,6 +115,7 @@ export default function ModelDashboard() {
                 config={{ displayModeBar: false, responsive: true }}
                 style={{ width: "100%", height: "380px" }}
               />
+              </ErrorBoundary>
             </div>
           </motion.div>
 

@@ -6,8 +6,12 @@ import dynamic from "next/dynamic";
 import { synergyTempoScatter, teams } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
 import { getTeamLogo } from "@/lib/assets";
+import ErrorBoundary from "./ErrorBoundary";
 
-const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
+const Plot = dynamic(() => import("react-plotly.js"), {
+  ssr: false,
+  loading: () => <div className="w-full h-[480px] rounded-lg bg-dota-surface/50 border border-dota-border/20 shimmer-overlay" />,
+});
 
 export default function SynergyVsTempo() {
   const [hoveredTeam, setHoveredTeam] = useState<string | null>(null);
@@ -65,7 +69,10 @@ export default function SynergyVsTempo() {
             className="lg:col-span-2 glass-card p-4 sm:p-6"
           >
             <div className="chart-container">
-              <Plot
+              <ErrorBoundary
+                fallback={<div className="w-full h-[480px] rounded-lg bg-dota-surface/50 border border-dota-border/20" />}
+              >
+                <Plot
                 data={[
                   {
                     type: "scatter" as const,
@@ -207,6 +214,7 @@ export default function SynergyVsTempo() {
                 config={{ displayModeBar: false, responsive: true }}
                 style={{ width: "100%", height: "480px" }}
               />
+              </ErrorBoundary>
             </div>
             {/* Team grid legend below chart */}
             <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">

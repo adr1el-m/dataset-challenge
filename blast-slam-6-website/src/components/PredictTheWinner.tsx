@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { quizQuestions, teams, modelResults } from "@/data/tournament";
 import TeamLogo from "./TeamLogo";
+import { applyQuizAnswer } from "@/lib/quiz";
 
 type QuizState = "intro" | "playing" | "result";
 
@@ -25,26 +26,25 @@ export default function PredictTheWinner() {
   const [selected, setSelected] = useState<string | null>(null);
   const [showExplanation, setShowExplanation] = useState(false);
   const [answers, setAnswers] = useState<boolean[]>([]);
+  const [focusedOption, setFocusedOption] = useState(0);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const question = quizQuestions[currentQ];
+  const answerOptions = useMemo(() => [question.teamA, question.teamB], [question.teamA, question.teamB]);
   const progress = ((currentQ + (showExplanation ? 1 : 0)) / quizQuestions.length) * 100;
+  const correctColor = "#3b82f6";
+  const incorrectColor = "#f59e0b";
 
   const handleSelect = useCallback((answer: string) => {
     setSelected(answer);
     setShowExplanation(true);
     const correct = answer === question.correctAnswer;
-    if (correct) {
-      setScore((s) => s + 1);
-      setStreak((s) => {
-        const newStreak = s + 1;
-        setMaxStreak((m) => Math.max(m, newStreak));
-        return newStreak;
-      });
-    } else {
-      setStreak(0);
-    }
-    setAnswers((a) => [...a, correct]);
-  }, [question]);
+    const next = applyQuizAnswer({ score, streak, maxStreak, answers }, correct);
+    setScore(next.score);
+    setStreak(next.streak);
+    setMaxStreak(next.maxStreak);
+    setAnswers(next.answers);
+  }, [question, score, streak, maxStreak, answers]);
 
   const handleNext = useCallback(() => {
     setSelected(null);
@@ -66,6 +66,36 @@ export default function PredictTheWinner() {
     setAnswers([]);
     setState("playing");
   }, []);
+
+  useEffect(() => {
+    setFocusedOption(0);
+  }, [currentQ, state]);
+
+  useEffect(() => {
+    if (state === "playing" && !showExplanation) {
+      optionRefs.current[focusedOption]?.focus();
+    }
+  }, [state, showExplanation, focusedOption, currentQ]);
+
+  const handleOptionKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
+    if (showExplanation) return;
+    const lastIndex = answerOptions.length - 1;
+    let nextIndex = index;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") nextIndex = Math.min(lastIndex, index + 1);
+    if (event.key === "ArrowLeft" || event.key === "ArrowUp") nextIndex = Math.max(0, index - 1);
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = lastIndex;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleSelect(answerOptions[index]);
+      return;
+    }
+    if (nextIndex !== index) {
+      event.preventDefault();
+      setFocusedOption(nextIndex);
+      optionRefs.current[nextIndex]?.focus();
+    }
+  }, [answerOptions, handleSelect, showExplanation]);
 
   const getTeamColor = (name: string) => teams.find((t) => t.name === name)?.color || "#64748b";
 
@@ -159,7 +189,8 @@ export default function PredictTheWinner() {
                   onClick={() => setState("playing")}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-10 py-3.5 rounded-full bg-dota-gold text-dota-bg font-heading font-bold text-lg shadow-lg shadow-dota-gold/20"
+                  className="px-10 py-3.5 rounded-full bg-dota-gold text-dota-bg font-heading font-bold text-lg shadow-lg shadow-dota-gold/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dota-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-dota-bg"
+                  aria-label="Begin quiz challenge"
                 >
                   Begin Challenge
                 </motion.button>
@@ -199,7 +230,7 @@ export default function PredictTheWinner() {
               <div className="h-1 bg-dota-bg/50 rounded-full mb-6 overflow-hidden">
                 <motion.div
                   className="h-full rounded-full"
-                  style={{ background: "linear-gradient(90deg, #c3ff00, #ff1a6c)" }}
+                  style={{ background: "linear-gradient(90deg, #3b82f6, #f59e0b)" }}
                   initial={{ width: `${(currentQ / quizQuestions.length) * 100}%` }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.5 }}
@@ -214,7 +245,7 @@ export default function PredictTheWinner() {
                     style={{
                       backgroundColor:
                         i < answers.length
-                          ? answers[i] ? "#c3ff00" : "#ff1a6c"
+                          ? answers[i] ? correctColor : incorrectColor
                           : i === currentQ
                           ? "#ffffff"
                           : "rgba(255,255,255,0.1)",
@@ -234,8 +265,8 @@ export default function PredictTheWinner() {
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-[1fr_auto_1fr] gap-3 sm:gap-4 mb-6 items-center">
-                {[question.teamA, question.teamB].map((team, idx) => {
+              <div className="grid sm:grid-cols-[1fr_auto_1fr] gap-3 sm:gap-4 mb-6 items-center" role="radiogroup" aria-label="Match winner">
+                {answerOptions.map((team, idx) => {
                   const isCorrect = team === question.correctAnswer;
                   const isSelected = team === selected;
                   let borderColor = "rgba(30,37,80,0.6)";
@@ -243,25 +274,33 @@ export default function PredictTheWinner() {
 
                   if (showExplanation) {
                     if (isCorrect) {
-                      borderColor = "rgba(195,255,0,0.5)";
-                      bgExtra = " bg-dota-gold/5";
+                      borderColor = "rgba(59,130,246,0.5)";
+                      bgExtra = " bg-blue-500/5";
                     } else if (isSelected && !isCorrect) {
-                      borderColor = "rgba(255,26,108,0.5)";
-                      bgExtra = " bg-blast-pink/5";
+                      borderColor = "rgba(245,158,11,0.5)";
+                      bgExtra = " bg-amber-500/5";
                     }
                   }
 
                   const btn = (
                     <motion.button
                       key={team}
+                      ref={(el) => { optionRefs.current[idx] = el; }}
                       onClick={() => !showExplanation && handleSelect(team)}
+                      onKeyDown={(event) => handleOptionKeyDown(event, idx)}
+                      onFocus={() => setFocusedOption(idx)}
+                      tabIndex={idx === focusedOption ? 0 : -1}
                       disabled={showExplanation}
                       whileHover={!showExplanation ? { scale: 1.04 } : {}}
                       whileTap={!showExplanation ? { scale: 0.96 } : {}}
-                      className={`glass-card p-5 sm:p-6 cursor-pointer transition-all text-center relative${bgExtra} ${
+                      className={`glass-card p-5 sm:p-6 cursor-pointer transition-all text-center relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dota-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-dota-bg${bgExtra} ${
                         showExplanation && !isCorrect && !isSelected ? "opacity-40" : ""
                       }`}
                       style={{ borderColor }}
+                      role="radio"
+                      aria-checked={isSelected}
+                      aria-disabled={showExplanation}
+                      aria-label={`${team}${showExplanation ? isCorrect ? " (correct)" : isSelected ? " (incorrect)" : "" : ""}`}
                     >
                       {showExplanation && isCorrect && (
                         <motion.div
@@ -304,10 +343,10 @@ export default function PredictTheWinner() {
                     exit={{ opacity: 0, height: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="p-4 rounded-lg bg-dota-surface/60 border border-dota-border/30 mb-4">
+                    <div className="p-4 rounded-lg bg-dota-surface/60 border border-dota-border/30 mb-4" aria-live="polite">
                       <div className="flex items-center gap-2 mb-1">
-                        <div className="w-1 h-4 rounded-full bg-dota-gold" />
-                        <span className="text-xs font-heading font-bold text-dota-gold uppercase tracking-wider">Analysis</span>
+                        <div className="w-1 h-4 rounded-full bg-blue-500" />
+                        <span className="text-xs font-heading font-bold text-blue-400 uppercase tracking-wider">Analysis</span>
                       </div>
                       <p className="text-sm text-dota-text-dim leading-relaxed pl-3">
                         {question.explanation}
@@ -318,7 +357,8 @@ export default function PredictTheWinner() {
                         onClick={handleNext}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-8 py-2.5 rounded-full bg-dota-gold text-dota-bg font-heading font-bold shadow-lg shadow-dota-gold/20"
+                        className="px-8 py-2.5 rounded-full bg-dota-gold text-dota-bg font-heading font-bold shadow-lg shadow-dota-gold/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dota-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-dota-bg"
+                        aria-label={currentQ < quizQuestions.length - 1 ? "Next match" : "See results"}
                       >
                         {currentQ < quizQuestions.length - 1 ? "Next Match" : "See Results"}
                       </motion.button>
@@ -397,7 +437,7 @@ export default function PredictTheWinner() {
                       animate={{ scale: 1 }}
                       transition={{ delay: 0.5 + i * 0.08 }}
                       className="w-3 h-3 rounded-sm"
-                      style={{ backgroundColor: correct ? "#c3ff00" : "#ff1a6c" }}
+                      style={{ backgroundColor: correct ? correctColor : incorrectColor }}
                     />
                   ))}
                 </div>
@@ -406,7 +446,8 @@ export default function PredictTheWinner() {
                   onClick={handleRestart}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-8 py-2.5 rounded-full bg-dota-gold text-dota-bg font-heading font-bold shadow-lg shadow-dota-gold/20"
+                  className="px-8 py-2.5 rounded-full bg-dota-gold text-dota-bg font-heading font-bold shadow-lg shadow-dota-gold/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dota-gold/70 focus-visible:ring-offset-2 focus-visible:ring-offset-dota-bg"
+                  aria-label="Play again"
                 >
                   Play Again
                 </motion.button>

@@ -21,6 +21,7 @@
   <img src="https://img.shields.io/badge/Plotly.js-2.35-3F4F75?logo=plotly&logoColor=white" alt="Plotly.js" />
   <img src="https://img.shields.io/badge/Three.js-r170-000000?logo=three.js&logoColor=white" alt="Three.js" />
   <img src="https://img.shields.io/badge/Framer_Motion-11-FF0055?logo=framer&logoColor=white" alt="Framer Motion" />
+  <img src="https://vercel.com/badge?project=blast-slam-6-analysis" alt="Vercel Deployment" />
 </p>
 
 ---

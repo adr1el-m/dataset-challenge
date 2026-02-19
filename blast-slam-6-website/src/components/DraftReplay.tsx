@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { grandFinalDraft } from "@/data/tournament";
-import { getHeroIcon } from "@/lib/assets";
+import { getHeroIcon, imageBlurDataUrl } from "@/lib/assets";
 
 const TIMER_DURATION = 2200; // ms per step
 
@@ -165,10 +166,14 @@ export default function DraftReplay() {
                             transition={{ type: "spring", stiffness: 200, damping: 15 }}
                             className="relative w-full h-full"
                           >
-                            <img
+                            <Image
                               src={getHeroIcon(pick.hero)}
                               alt={pick.hero}
+                              width={64}
+                              height={64}
                               className="w-full h-full object-cover rounded"
+                              placeholder="blur"
+                              blurDataURL={imageBlurDataUrl}
                             />
                             <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-[8px] text-center text-white py-0.5 truncate px-0.5">
                               {pick.hero}
@@ -204,10 +209,14 @@ export default function DraftReplay() {
                             transition={{ type: "spring", stiffness: 200, damping: 15 }}
                             className="relative w-full h-full"
                           >
-                            <img
+                            <Image
                               src={getHeroIcon(pick.hero)}
                               alt={pick.hero}
+                              width={64}
+                              height={64}
                               className="w-full h-full object-cover rounded"
+                              placeholder="blur"
+                              blurDataURL={imageBlurDataUrl}
                             />
                             <div className="absolute bottom-0 left-0 right-0 bg-black/70 text-[8px] text-center text-white py-0.5 truncate px-0.5">
                               {pick.hero}
@@ -246,10 +255,14 @@ export default function DraftReplay() {
                             animate={{ opacity: 1, scale: 1 }}
                             className="relative w-full h-full"
                           >
-                            <img
+                            <Image
                               src={getHeroIcon(ban.hero)}
                               alt={ban.hero}
+                              width={40}
+                              height={40}
                               className="w-full h-full object-cover rounded opacity-40 grayscale"
+                              placeholder="blur"
+                              blurDataURL={imageBlurDataUrl}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
                               <span className="text-[#ff4444] text-lg font-bold">✕</span>
@@ -284,10 +297,14 @@ export default function DraftReplay() {
                             animate={{ opacity: 1, scale: 1 }}
                             className="relative w-full h-full"
                           >
-                            <img
+                            <Image
                               src={getHeroIcon(ban.hero)}
                               alt={ban.hero}
+                              width={40}
+                              height={40}
                               className="w-full h-full object-cover rounded opacity-40 grayscale"
+                              placeholder="blur"
+                              blurDataURL={imageBlurDataUrl}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
                               <span className="text-[#ff4444] text-lg font-bold">✕</span>
@@ -404,10 +421,14 @@ export default function DraftReplay() {
                       : "border-[#eab308]/40"
                   }`}
                 >
-                  <img
+                  <Image
                     src={getHeroIcon(action.hero)}
                     alt={action.hero}
+                    width={28}
+                    height={28}
                     className="w-full h-full object-cover"
+                    placeholder="blur"
+                    blurDataURL={imageBlurDataUrl}
                   />
                 </div>
                 <span
@@ -453,10 +474,14 @@ export default function DraftReplay() {
                           className="flex flex-col items-center gap-1"
                         >
                           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg border-2 border-[#92ff49]/50 overflow-hidden glow-radiant">
-                            <img
+                            <Image
                               src={getHeroIcon(pick.hero)}
                               alt={pick.hero}
+                              width={56}
+                              height={56}
                               className="w-full h-full object-cover"
+                              placeholder="blur"
+                              blurDataURL={imageBlurDataUrl}
                             />
                           </div>
                           <span className="text-[9px] text-gray-400">{pick.hero}</span>
@@ -479,10 +504,14 @@ export default function DraftReplay() {
                           className="flex flex-col items-center gap-1"
                         >
                           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg border-2 border-[#ff4444]/50 overflow-hidden glow-dire">
-                            <img
+                            <Image
                               src={getHeroIcon(pick.hero)}
                               alt={pick.hero}
+                              width={56}
+                              height={56}
                               className="w-full h-full object-cover"
+                              placeholder="blur"
+                              blurDataURL={imageBlurDataUrl}
                             />
                           </div>
                           <span className="text-[9px] text-gray-400">{pick.hero}</span>

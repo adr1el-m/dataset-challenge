@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { getTeamLogo } from "@/lib/assets";
+import Image from "next/image";
+import { getTeamLogo, imageBlurDataUrl } from "@/lib/assets";
 
 interface TeamLogoProps {
   name: string;
@@ -36,7 +37,7 @@ export default function TeamLogo({ name, size = 32, className = "" }: TeamLogoPr
   }
 
   return (
-    <img
+    <Image
       src={src}
       alt={`${name} logo`}
       width={size}
@@ -44,7 +45,8 @@ export default function TeamLogo({ name, size = 32, className = "" }: TeamLogoPr
       className={`object-contain shrink-0 ${className}`}
       style={{ width: size, height: size }}
       onError={() => setFailed(true)}
-      loading="lazy"
+      placeholder="blur"
+      blurDataURL={imageBlurDataUrl}
     />
   );
 }

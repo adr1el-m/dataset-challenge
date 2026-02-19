@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { playerSpotlights, PlayerData } from "@/data/tournament";
-import { getHeroIcon, getPlayerAvatar } from "@/lib/assets";
+import { getHeroIcon, getPlayerAvatar, imageBlurDataUrl } from "@/lib/assets";
 import ace from "@/img/Liquid/ace.jpg";
 import boxi from "@/img/Liquid/boxi.jpg";
 import m1cke from "@/img/Liquid/m1cke.jpg";
@@ -136,10 +137,14 @@ function PlayerCard({ player, index }: { player: PlayerData; index: number }) {
                   key={hero}
                   className="w-8 h-8 rounded border border-dota-border/30 overflow-hidden hover:border-dota-gold/40 transition-all group relative"
                 >
-                  <img
+                  <Image
                     src={getHeroIcon(hero)}
                     alt={hero}
+                    width={32}
+                    height={32}
                     className="w-full h-full object-cover"
+                    placeholder="blur"
+                    blurDataURL={imageBlurDataUrl}
                   />
                   <div className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span className="text-[7px] text-white text-center leading-tight">{hero}</span>

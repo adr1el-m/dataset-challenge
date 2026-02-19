@@ -116,6 +116,9 @@ export function getHeroIcon(heroName: string): string {
   return `https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${internal}.png`;
 }
 
+export const imageBlurDataUrl =
+  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSI4IiB2aWV3Qm94PSIwIDAgOCA4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSI4IiBoZWlnaHQ9IjgiIGZpbGw9IiMwRDEyMjgiLz48L3N2Zz4=";
+
 /**
  * Get a generated player avatar using DiceBear API.
  * Produces a unique SVG avatar based on the player's name — no file upload needed.

@@ -42,37 +42,37 @@ export default function Home() {
       <Navigation />
       <ScrollHUD />
       <BackToTop />
-      <SectionFade delay={0}>
+      <SectionFade delay={0} eager>
         <HeroSection />
       </SectionFade>
-      <SectionFade delay={0.05}>
+      <SectionFade delay={0.05} fallback={sectionFallback()}>
         <TournamentOverview />
       </SectionFade>
-      <SectionFade delay={0.1}>
+      <SectionFade delay={0.1} fallback={sectionFallback()}>
         <TeamExplorer />
       </SectionFade>
-      <SectionFade delay={0.15}>
+      <SectionFade delay={0.15} fallback={sectionFallback()}>
         <HeroMeta />
       </SectionFade>
-      <SectionFade delay={0.2}>
+      <SectionFade delay={0.2} fallback={sectionFallback()}>
         <DraftReplay />
       </SectionFade>
-      <SectionFade delay={0.25}>
+      <SectionFade delay={0.25} fallback={sectionFallback()}>
         <SynergyVsTempo />
       </SectionFade>
-      <SectionFade delay={0.3}>
+      <SectionFade delay={0.3} fallback={sectionFallback()}>
         <ModelDashboard />
       </SectionFade>
-      <SectionFade delay={0.35}>
+      <SectionFade delay={0.35} fallback={sectionFallback()}>
         <DraftSimulator />
       </SectionFade>
-      <SectionFade delay={0.4}>
+      <SectionFade delay={0.4} fallback={sectionFallback()}>
         <PlayerSpotlight />
       </SectionFade>
-      <SectionFade delay={0.45}>
+      <SectionFade delay={0.45} fallback={sectionFallback()}>
         <PredictTheWinner />
       </SectionFade>
-      <SectionFade delay={0.5}>
+      <SectionFade delay={0.5} fallback={sectionFallback()}>
         <KeyFindings />
       </SectionFade>
       <Footer />

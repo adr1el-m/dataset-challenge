@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { heroMeta, modelResults, allDotaHeroes } from "@/data/tournament";
 import type { DotaHero } from "@/data/tournament";
-import { getHeroIcon } from "@/lib/assets";
+import { getHeroIcon, imageBlurDataUrl } from "@/lib/assets";
+import { calculateSynergy } from "@/lib/synergy";
 
 const ATTRIBUTES = ["All", "strength", "agility", "intelligence", "universal"] as const;
 const ATTRIBUTE_LABELS: Record<string, string> = {
@@ -26,93 +28,14 @@ function getHeroStats(name: string) {
   return heroMeta.find((h) => h.name === name);
 }
 
-// Synergy calculation using model feature weights
-function calculateSynergy(heroes: DotaHero[]): {
-  synergyIndex: number;
-  winProb: number;
-  breakdown: { label: string; value: number; max: number }[];
-} {
-  if (heroes.length === 0) return { synergyIndex: 0, winProb: 0.5, breakdown: [] };
-
-  const weights = modelResults.featureImportance;
-  const synergyWeight = weights.find((w) => w.feature === "Synergy Index")?.importance || 0.342;
-  const tempoWeight = weights.find((w) => w.feature === "Tempo Index")?.importance || 0.298;
-
-  // Attribute diversity score (0-1): penalize duplicate attributes
-  const attrCounts: Record<string, number> = {};
-  heroes.forEach((h) => {
-    attrCounts[h.attribute] = (attrCounts[h.attribute] || 0) + 1;
-  });
-  const uniqueAttrs = Object.keys(attrCounts).length;
-  const attrScore = Math.min(uniqueAttrs / Math.min(heroes.length, 4), 1);
-
-  // Average win rate & contest rate from tournament data (default to 50% / 30% if not in heroMeta)
-  const statsArr = heroes.map((h) => {
-    const s = getHeroStats(h.name);
-    return { winRate: s?.winRate ?? 0.5, contestRate: s?.contestRate ?? 0.3 };
-  });
-  const avgWR = statsArr.reduce((s, x) => s + x.winRate, 0) / heroes.length;
-  const avgContest = statsArr.reduce((s, x) => s + x.contestRate, 0) / heroes.length;
-
-  // Combo detection: bonus for known synergy pairs
-  const heroNames = heroes.map((h) => h.name);
-  let comboBonus = 0;
-  const combos = [
-    { heroes: ["Faceless Void", "Mars"], bonus: 12, label: "Chrono + Arena" },
-    { heroes: ["Jakiro", "Mars"], bonus: 8, label: "Ice Path + Arena" },
-    { heroes: ["Phoenix", "Faceless Void"], bonus: 10, label: "Egg + Chrono" },
-    { heroes: ["Enigma", "Jakiro"], bonus: 9, label: "Black Hole + Macropyre" },
-    { heroes: ["Shadow Demon", "Faceless Void"], bonus: 7, label: "Disruption + Chrono" },
-    { heroes: ["Phoenix", "Enigma"], bonus: 11, label: "Egg + Black Hole" },
-    { heroes: ["Invoker", "Faceless Void"], bonus: 10, label: "Meteor + Chrono" },
-    { heroes: ["Earthshaker", "Enigma"], bonus: 8, label: "Echo + Black Hole" },
-    { heroes: ["Naga Siren", "Enigma"], bonus: 9, label: "Song + Black Hole" },
-    { heroes: ["Crystal Maiden", "Faceless Void"], bonus: 7, label: "Frostbite + Chrono" },
-    { heroes: ["Magnus", "Faceless Void"], bonus: 10, label: "RP + Chrono" },
-    { heroes: ["Dark Seer", "Enigma"], bonus: 8, label: "Vacuum + Black Hole" },
-    { heroes: ["Tidehunter", "Earthshaker"], bonus: 7, label: "Ravage + Echo" },
-    { heroes: ["Centaur Warrunner", "Io"], bonus: 9, label: "Relocate Gank" },
-    { heroes: ["Tiny", "Io"], bonus: 11, label: "Tiny + Io Relocate" },
-    { heroes: ["Drow Ranger", "Vengeful Spirit"], bonus: 6, label: "Aura Stack" },
-    { heroes: ["Weaver", "Dazzle"], bonus: 7, label: "Double Save Carry" },
-    { heroes: ["Huskar", "Dazzle"], bonus: 8, label: "Grave Huskar" },
-    { heroes: ["Juggernaut", "Crystal Maiden"], bonus: 6, label: "Spin + Frostbite" },
-    { heroes: ["Ursa", "Io"], bonus: 8, label: "Ursa + Io Relocate" },
-  ];
-  combos.forEach((c) => {
-    if (c.heroes.every((h) => heroNames.includes(h))) {
-      comboBonus += c.bonus;
-    }
-  });
-
-  // Weighted synergy index (0-100)
-  const rawSynergy =
-    attrScore * 30 * synergyWeight +
-    avgWR * 40 * tempoWeight +
-    avgContest * 20 +
-    Math.min(comboBonus, 25);
-
-  const synergyIndex = Math.min(Math.round(rawSynergy * 10) / 10, 100);
-
-  // Win probability: sigmoid transform relative to tournament average (72.5)
-  const tournamentAvgSynergy = 72.5;
-  const exponent = (synergyIndex - tournamentAvgSynergy) / 15;
-  const winProb = Math.round((1 / (1 + Math.exp(-exponent))) * 1000) / 1000;
-
-  const breakdown = [
-    { label: "Attribute Diversity", value: Math.round(attrScore * 100), max: 100 },
-    { label: "Avg Win Rate", value: Math.round(avgWR * 100), max: 100 },
-    { label: "Meta Relevance", value: Math.round(avgContest * 100), max: 100 },
-    { label: "Combo Bonus", value: Math.min(Math.round(comboBonus), 25), max: 25 },
-  ];
-
-  return { synergyIndex, winProb, breakdown };
-}
 
 export default function DraftSimulator() {
   const [selectedHeroes, setSelectedHeroes] = useState<DotaHero[]>([]);
   const [search, setSearch] = useState("");
   const [attrFilter, setAttrFilter] = useState<string>("All");
+  const [focusedHeroIndex, setFocusedHeroIndex] = useState(0);
+  const [gridColumns, setGridColumns] = useState(5);
+  const heroButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const filteredHeroes = useMemo(() => {
     return allDotaHeroes
@@ -148,9 +71,39 @@ export default function DraftSimulator() {
   const clearDraft = () => setSelectedHeroes([]);
 
   const { synergyIndex, winProb, breakdown } = useMemo(
-    () => calculateSynergy(selectedHeroes),
+    () => calculateSynergy(selectedHeroes, heroMeta, modelResults.featureImportance),
     [selectedHeroes]
   );
+
+  useEffect(() => {
+    const updateColumns = () => {
+      const width = window.innerWidth;
+      setGridColumns(width >= 1024 ? 8 : width >= 768 ? 7 : width >= 640 ? 6 : 5);
+    };
+    updateColumns();
+    window.addEventListener("resize", updateColumns);
+    return () => window.removeEventListener("resize", updateColumns);
+  }, []);
+
+  useEffect(() => {
+    setFocusedHeroIndex(0);
+  }, [search, attrFilter, filteredHeroes.length]);
+
+  const handleHeroKeyDown = useCallback((event: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const lastIndex = filteredHeroes.length - 1;
+    let nextIndex = index;
+    if (event.key === "ArrowRight") nextIndex = Math.min(lastIndex, index + 1);
+    if (event.key === "ArrowLeft") nextIndex = Math.max(0, index - 1);
+    if (event.key === "ArrowDown") nextIndex = Math.min(lastIndex, index + gridColumns);
+    if (event.key === "ArrowUp") nextIndex = Math.max(0, index - gridColumns);
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = lastIndex;
+    if (nextIndex !== index) {
+      event.preventDefault();
+      setFocusedHeroIndex(nextIndex);
+      heroButtonRefs.current[nextIndex]?.focus();
+    }
+  }, [filteredHeroes.length, gridColumns]);
 
   // Liquid's actual GF draft for comparison
   const liquidDraft = useMemo(() => {
@@ -158,11 +111,11 @@ export default function DraftSimulator() {
     const heroes: DotaHero[] = liquidHeroNames
       .map((name) => allDotaHeroes.find((h) => h.name === name))
       .filter((h): h is DotaHero => !!h);
-    return calculateSynergy(heroes);
+    return calculateSynergy(heroes, heroMeta, modelResults.featureImportance);
   }, []);
 
   const synergyColor =
-    synergyIndex >= 75 ? "#92ff49" : synergyIndex >= 55 ? "#eab308" : "#ff4444";
+    synergyIndex >= 75 ? "#3b82f6" : synergyIndex >= 55 ? "#f59e0b" : "#a855f7";
 
   return (
     <section id="simulator" className="relative py-20 sm:py-32 px-4 sm:px-6 hex-pattern">
@@ -197,12 +150,14 @@ export default function DraftSimulator() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search heroes..."
-                  className="w-full px-4 py-2.5 rounded-lg bg-dota-bg/80 border border-dota-border/30 text-white text-sm focus:border-dota-gold/50 focus:outline-none font-mono placeholder:text-gray-600"
+                  aria-label="Search heroes"
+                  className="w-full px-4 py-2.5 rounded-lg bg-dota-bg/80 border border-dota-border/30 text-white text-sm focus:border-dota-gold/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-dota-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-dota-bg font-mono placeholder:text-gray-600"
                 />
                 {search && (
                   <button
                     onClick={() => setSearch("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-sm"
+                    aria-label="Clear search"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dota-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-dota-bg"
                   >
                     ✕
                   </button>
@@ -213,7 +168,9 @@ export default function DraftSimulator() {
                   <button
                     key={attr}
                     onClick={() => setAttrFilter(attr)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all ${
+                    aria-pressed={attrFilter === attr}
+                    aria-label={`Filter by ${ATTRIBUTE_LABELS[attr]}`}
+                    className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dota-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-dota-bg ${
                       attrFilter === attr
                         ? "bg-dota-gold/20 text-dota-gold border border-dota-gold/40"
                         : "bg-dota-surface/60 text-gray-500 border border-dota-border/20 hover:text-gray-300"
@@ -231,23 +188,36 @@ export default function DraftSimulator() {
             </div>
 
             {/* Hero Grid */}
-            <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 gap-2 max-h-[400px] overflow-y-auto pr-1 custom-scroll">
-              {filteredHeroes.map((hero) => {
+            <div
+              className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8 gap-2 max-h-[400px] overflow-y-auto pr-1 custom-scroll"
+              role="listbox"
+              aria-label="Hero selection grid"
+              aria-multiselectable="true"
+            >
+              {filteredHeroes.map((hero, index) => {
                 const selected = isSelected(hero.name);
                 const disabled = !selected && selectedHeroes.length >= 5;
                 const hasTournamentData = !!getHeroStats(hero.name);
                 return (
                   <button
                     key={hero.name}
+                    ref={(el) => { heroButtonRefs.current[index] = el; }}
                     onClick={() => toggleHero(hero)}
+                    onKeyDown={(event) => handleHeroKeyDown(event, index)}
+                    onFocus={() => setFocusedHeroIndex(index)}
+                    tabIndex={index === focusedHeroIndex ? 0 : -1}
                     disabled={disabled}
-                    className={`relative group flex flex-col items-center gap-1 p-1.5 rounded-lg transition-all ${
+                    className={`relative group flex flex-col items-center gap-1 p-1.5 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dota-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-dota-bg ${
                       selected
                         ? "bg-dota-gold/15 ring-2 ring-dota-gold/50 scale-105"
                         : disabled
                         ? "opacity-30 cursor-not-allowed"
                         : "hover:bg-dota-surface/80 hover:scale-105"
                     }`}
+                    role="option"
+                    aria-selected={selected}
+                    aria-disabled={disabled}
+                    aria-label={`${hero.name}${selected ? " selected" : ""}${disabled && !selected ? " unavailable" : ""}${hasTournamentData ? ", played in tournament" : ""}`}
                   >
                     <div
                       className={`w-11 h-11 rounded-lg overflow-hidden border-2 transition-all ${
@@ -256,13 +226,17 @@ export default function DraftSimulator() {
                           : "border-dota-border/20 group-hover:border-dota-gold/30"
                       }`}
                     >
-                      <img
+                      <Image
                         src={getHeroIcon(hero.name)}
                         alt={hero.name}
+                        width={44}
+                        height={44}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           (e.target as HTMLImageElement).style.display = "none";
                         }}
+                        placeholder="blur"
+                        blurDataURL={imageBlurDataUrl}
                       />
                     </div>
                     <span className="text-[9px] text-gray-400 truncate max-w-full leading-tight text-center">
@@ -312,7 +286,8 @@ export default function DraftSimulator() {
                 {selectedHeroes.length > 0 && (
                   <button
                     onClick={clearDraft}
-                    className="text-xs text-gray-500 hover:text-blast-pink transition-colors font-mono"
+                  className="text-xs text-gray-500 hover:text-blast-pink transition-colors font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-dota-gold/50 focus-visible:ring-offset-2 focus-visible:ring-offset-dota-bg"
+                  aria-label="Clear selected heroes"
                   >
                     Clear
                   </button>
@@ -344,10 +319,14 @@ export default function DraftSimulator() {
                             className="w-full h-full relative cursor-pointer"
                             onClick={() => toggleHero(hero)}
                           >
-                            <img
+                            <Image
                               src={getHeroIcon(hero.name)}
                               alt={hero.name}
+                              width={48}
+                              height={48}
                               className="w-full h-full object-cover"
+                              placeholder="blur"
+                              blurDataURL={imageBlurDataUrl}
                             />
                           </motion.div>
                         ) : (
@@ -391,9 +370,9 @@ export default function DraftSimulator() {
                     {selectedHeroes.length > 0 ? `${(winProb * 100).toFixed(1)}%` : "—"}
                   </span>
                 </div>
-                <div className="h-1.5 bg-dota-surface rounded-full overflow-hidden">
+                <div className="h-1.5 bg-dota-surface rounded-full overflow-hidden" aria-hidden="true">
                   <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-[#ff4444] via-[#eab308] to-[#92ff49]"
+                    className="h-full rounded-full bg-gradient-to-r from-[#3b82f6] via-[#a855f7] to-[#f59e0b]"
                     animate={{ width: `${selectedHeroes.length > 0 ? winProb * 100 : 50}%` }}
                     transition={{ duration: 0.5, ease: "easeOut" }}
                   />
@@ -434,7 +413,15 @@ export default function DraftSimulator() {
               <div className="flex items-center gap-2 mb-3">
                 {["Batrider", "Shadow Demon", "Earth Spirit", "Dragon Knight", "Ember Spirit"].map((hero) => (
                   <div key={hero} className="w-8 h-8 rounded border border-[#06b6d4]/30 overflow-hidden">
-                    <img src={getHeroIcon(hero)} alt={hero} className="w-full h-full object-cover" />
+                    <Image
+                      src={getHeroIcon(hero)}
+                      alt={hero}
+                      width={32}
+                      height={32}
+                      className="w-full h-full object-cover"
+                      placeholder="blur"
+                      blurDataURL={imageBlurDataUrl}
+                    />
                   </div>
                 ))}
               </div>

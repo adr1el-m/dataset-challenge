@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { heroMeta, type HeroMeta as HeroMetaType } from "@/data/tournament";
-import { getHeroIcon } from "@/lib/assets";
+import { getHeroIcon, imageBlurDataUrl } from "@/lib/assets";
 
 type RoleFilter = "all" | HeroMetaType["role"];
 
@@ -26,15 +27,16 @@ const roleLabels: Record<string, string> = {
 
 function HeroIcon({ name, size = 24 }: { name: string; size?: number }) {
   return (
-    <img
+    <Image
       src={getHeroIcon(name)}
       alt={name}
       width={size}
       height={size}
       className="rounded-sm object-cover shrink-0"
       style={{ width: size, height: size }}
-      loading="lazy"
       onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+      placeholder="blur"
+      blurDataURL={imageBlurDataUrl}
     />
   );
 }
